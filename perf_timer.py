@@ -38,13 +38,28 @@ from collections import deque
 _collecting = True
 
 class ReportMode(object):
+	"""
+	Enum defining the perf timer reporting mode.
+	"""
 	TREE = 0
 	FLAT = 1
 	HTML = 2
 
 def EnablePerfTracking(enable=True):
+	"""
+	Enable (or disable) the perf timer.
+
+	:param enable: True to enable the perf timer, False to disable.
+	:type enable: bool
+	"""
 	global _collecting
 	_collecting = enable
+
+def DisablePerfTracking():
+	"""
+	Helper function for explicitly disabling the perf timer.
+	"""
+	EnablePerfTracking(False)
 
 _htmlHeader = """<!DOCTYPE html><HTML>
 	<HEAD>
@@ -468,13 +483,20 @@ class PerfTimer(object):
 	def PrintPerfReport(reportMode, output=None):
 		"""
 		Print out all the collected data from PerfTimers in a heirarchical tree
+
+		:param reportMode: :class:`ReportMode` enum value defining how the report is output to the user.
+		:type reportMode: int
+
+		:param output: When the report mode is "flat" or "tree, this is a function that receives each line of output (defaults to stdout when None).
+		               When the report mode is "html", this is the name of the file dumped by the report (defaults to the name of the main module file + "_PERF.html" when None).
+		:type output: None or :class:`collections.Callable` or str
 		"""
 
 		fullreport = {}
 		threadreports = {}
 
 		#pylint: disable=missing-docstring
-		class Position:
+		class Position(object):
 			Inclusive = 0
 			Exclusive = 1
 			Count = 2
@@ -529,7 +551,7 @@ class PerfTimer(object):
 
 			with open(output, "w") as f:
 				#pylint: disable=missing-docstring
-				class SharedLocals:
+				class SharedLocals(object):
 					identifiers = {}
 					lastId = {}
 					totalExc = 0
@@ -556,6 +578,10 @@ class PerfTimer(object):
 							continue
 
 						if key.startswith(prefix):
+							reportEntry = report[key]
+							reportIncMean = reportEntry[Position.Inclusive] / reportEntry[Position.Count]
+							reportExcMean = reportEntry[Position.Exclusive] / reportEntry[Position.Count]
+
 							printkey = key.replace(prefix, "", 1)
 							if printkey.find("::") != -1:
 								continue
@@ -567,26 +593,26 @@ class PerfTimer(object):
 							f.write(
 								itemfmt.format(
 									printkey,
-									report[key][Position.Inclusive],
-									report[key][Position.Exclusive],
-									report[key][Position.Count],
-									report[key][Position.MaxInc],
-									report[key][Position.MinInc],
-									report[key][Position.Inclusive]/report[key][Position.Count],
-									report[key][Position.MaxExc],
-									report[key][Position.MinExc],
-									report[key][Position.Exclusive]/report[key][Position.Count],
+									reportEntry[Position.Inclusive],
+									reportEntry[Position.Exclusive],
+									reportEntry[Position.Count],
+									reportEntry[Position.MaxInc],
+									reportEntry[Position.MinInc],
+									reportIncMean,
+									reportEntry[Position.MaxExc],
+									reportEntry[Position.MinExc],
+									reportExcMean,
 								)
 							)
 
-							SharedLocals.totalExc += report[key][Position.Exclusive]
-							SharedLocals.totalCount += report[key][Position.Count]
-							SharedLocals.maxExcMean = max(SharedLocals.maxExcMean, report[key][Position.Exclusive]/report[key][Position.Count])
-							SharedLocals.maxIncMean = max(SharedLocals.maxIncMean, report[key][Position.Inclusive]/report[key][Position.Count])
-							SharedLocals.maxExcMax = max(SharedLocals.maxExcMax, report[key][Position.MaxExc])
-							SharedLocals.maxIncMax = max(SharedLocals.maxIncMax, report[key][Position.MaxInc])
-							SharedLocals.maxExcMin = max(SharedLocals.maxExcMin, report[key][Position.MinExc])
-							SharedLocals.maxIncMin = max(SharedLocals.maxIncMin, report[key][Position.MinInc])
+							SharedLocals.totalExc += reportEntry[Position.Exclusive]
+							SharedLocals.totalCount += reportEntry[Position.Count]
+							SharedLocals.maxExcMean = max(SharedLocals.maxExcMean, reportExcMean)
+							SharedLocals.maxIncMean = max(SharedLocals.maxIncMean, reportIncMean)
+							SharedLocals.maxExcMax = max(SharedLocals.maxExcMax, reportEntry[Position.MaxExc])
+							SharedLocals.maxIncMax = max(SharedLocals.maxIncMax, reportEntry[Position.MaxInc])
+							SharedLocals.maxExcMin = max(SharedLocals.maxExcMin, reportEntry[Position.MinExc])
+							SharedLocals.maxIncMin = max(SharedLocals.maxIncMin, reportEntry[Position.MinInc])
 
 							f.write("\t" * (indent+2))
 							f.write("[")
@@ -604,7 +630,7 @@ class PerfTimer(object):
 						return
 					totalcount = 0
 					for key in report:
-						totalcount += report[key][2]
+						totalcount += report[key][Position.Count]
 
 					sortedKeys = sorted(report, reverse=True, key=lambda x: report[x][0] if reportMode == ReportMode.TREE else report[x][1])
 
@@ -639,6 +665,10 @@ class PerfTimer(object):
 					printed = set()
 					first = True
 					for key in sortedKeys:
+						reportEntry = report[key]
+						reportIncMean = reportEntry[Position.Inclusive] / reportEntry[Position.Count]
+						reportExcMean = reportEntry[Position.Exclusive] / reportEntry[Position.Count]
+
 						if key in printed:
 							continue
 						if key.find("::") != -1:
@@ -649,36 +679,27 @@ class PerfTimer(object):
 						f.write(
 							itemfmt.format(
 								key,
-								report[key][Position.Inclusive],
-								report[key][Position.Exclusive],
-								report[key][Position.Count],
-								report[key][Position.MaxInc],
-								report[key][Position.MinInc],
-								report[key][Position.Inclusive]/report[key][Position.Count],
-								report[key][Position.MaxExc],
-								report[key][Position.MinExc],
-								report[key][Position.Exclusive]/report[key][Position.Count],
+								reportEntry[Position.Inclusive],
+								reportEntry[Position.Exclusive],
+								reportEntry[Position.Count],
+								reportEntry[Position.MaxInc],
+								reportEntry[Position.MinInc],
+								reportIncMean,
+								reportEntry[Position.MaxExc],
+								reportEntry[Position.MinExc],
+								reportExcMean,
 							)
 						)
 
-						SharedLocals.totalExc += report[key][Position.Exclusive]
-						SharedLocals.totalCount += report[key][Position.Count]
-						SharedLocals.maxExcMean = max(SharedLocals.maxExcMean, report[key][Position.Exclusive]/report[key][Position.Count])
-						SharedLocals.maxIncMean = max(SharedLocals.maxIncMean, report[key][Position.Inclusive]/report[key][Position.Count])
-						SharedLocals.maxExcMax = max(SharedLocals.maxExcMax, report[key][Position.MaxExc])
-						SharedLocals.maxIncMax = max(SharedLocals.maxIncMax, report[key][Position.MaxInc])
-						SharedLocals.maxExcMin = max(SharedLocals.maxExcMin, report[key][Position.MinExc])
-						SharedLocals.maxIncMin = max(SharedLocals.maxIncMin, report[key][Position.MinInc])
+						SharedLocals.totalExc += reportEntry[Position.Exclusive]
+						SharedLocals.totalCount += reportEntry[Position.Count]
+						SharedLocals.maxExcMean = max(SharedLocals.maxExcMean, reportExcMean)
+						SharedLocals.maxIncMean = max(SharedLocals.maxIncMean, reportIncMean)
+						SharedLocals.maxExcMax = max(SharedLocals.maxExcMax, reportEntry[Position.MaxExc])
+						SharedLocals.maxIncMax = max(SharedLocals.maxIncMax, reportEntry[Position.MaxInc])
+						SharedLocals.maxExcMin = max(SharedLocals.maxExcMin, reportEntry[Position.MinExc])
+						SharedLocals.maxIncMin = max(SharedLocals.maxIncMin, reportEntry[Position.MinInc])
 						f.write("\t\t\t\t\t\t[")
-
-						SharedLocals.totalExc += report[key][1]
-						SharedLocals.totalCount += report[key][2]
-						SharedLocals.maxExcMean = max(SharedLocals.maxExcMean, report[key][Position.Exclusive]/report[key][Position.Count])
-						SharedLocals.maxIncMean = max(SharedLocals.maxIncMean, report[key][Position.Inclusive]/report[key][Position.Count])
-						SharedLocals.maxExcMax = max(SharedLocals.maxExcMax, report[key][Position.MaxExc])
-						SharedLocals.maxIncMax = max(SharedLocals.maxIncMax, report[key][Position.MaxInc])
-						SharedLocals.maxExcMin = max(SharedLocals.maxExcMin, report[key][Position.MinExc])
-						SharedLocals.maxIncMin = max(SharedLocals.maxIncMin, report[key][Position.MinInc])
 
 						_recurseHtml(report, sortedKeys, key + "::", printed, itemfmt, 6)
 						first = False
@@ -728,18 +749,21 @@ class PerfTimer(object):
 						if printkey.find("::") != -1:
 							continue
 						if prev != (None, None):
+							reportEntry = report[prev[1]]
+							reportIncMean = reportEntry[Position.Inclusive] / reportEntry[Position.Count]
+							reportExcMean = reportEntry[Position.Exclusive] / reportEntry[Position.Count]
 							output(
 								itemfmt.format(
 									prev[0],
-									_formatTime(report[prev[1]][Position.Inclusive]),
-									_formatTime(report[prev[1]][Position.Exclusive]),
-									report[prev[1]][Position.Count],
-									_formatTime(report[prev[1]][Position.MinInc]),
-									_formatTime(report[prev[1]][Position.MaxInc]),
-									_formatTime(report[prev[1]][Position.Inclusive]/report[key][Position.Count]),
-									_formatTime(report[prev[1]][Position.MinExc]),
-									_formatTime(report[prev[1]][Position.MaxExc]),
-									_formatTime(report[prev[1]][Position.Exclusive]/report[key][Position.Count]),
+									_formatTime(reportEntry[Position.Inclusive]),
+									_formatTime(reportEntry[Position.Exclusive]),
+									reportEntry[Position.Count],
+									_formatTime(reportEntry[Position.MinInc]),
+									_formatTime(reportEntry[Position.MaxInc]),
+									_formatTime(reportIncMean),
+									_formatTime(reportEntry[Position.MinExc]),
+									_formatTime(reportEntry[Position.MaxExc]),
+									_formatTime(reportExcMean),
 								)
 							)
 							printed.add(prev[1])
@@ -748,18 +772,21 @@ class PerfTimer(object):
 
 				if prev != (None, None):
 					printkey = prev[0].replace("\u251c", "\u2514")
+					reportEntry = report[prev[1]]
+					reportIncMean = reportEntry[Position.Inclusive] / reportEntry[Position.Count]
+					reportExcMean = reportEntry[Position.Exclusive] / reportEntry[Position.Count]
 					output(
 						itemfmt.format(
 							printkey,
-							_formatTime(report[prev[1]][Position.Inclusive]),
-							_formatTime(report[prev[1]][Position.Exclusive]),
-							report[prev[1]][Position.Count],
-							_formatTime(report[prev[1]][Position.MinInc]),
-							_formatTime(report[prev[1]][Position.MaxInc]),
-							_formatTime(report[prev[1]][Position.Inclusive]/report[key][Position.Count]),
-							_formatTime(report[prev[1]][Position.MinExc]),
-							_formatTime(report[prev[1]][Position.MaxExc]),
-							_formatTime(report[prev[1]][Position.Exclusive]/report[key][Position.Count]),
+							_formatTime(reportEntry[Position.Inclusive]),
+							_formatTime(reportEntry[Position.Exclusive]),
+							reportEntry[Position.Count],
+							_formatTime(reportEntry[Position.MinInc]),
+							_formatTime(reportEntry[Position.MaxInc]),
+							_formatTime(reportIncMean),
+							_formatTime(reportEntry[Position.MinExc]),
+							_formatTime(reportEntry[Position.MaxExc]),
+							_formatTime(reportExcMean),
 						)
 					)
 					printed.add(prev[1])
@@ -794,24 +821,25 @@ class PerfTimer(object):
 						continue
 					if key.find("::") != -1:
 						continue
+					reportEntry = report[key]
 					output(
 						itemfmt.format(
 							key,
-							_formatTime(report[key][Position.Inclusive]),
-							_formatTime(report[key][Position.Exclusive]),
-							report[key][Position.Count],
-							_formatTime(report[key][Position.MinInc]),
-							_formatTime(report[key][Position.MaxInc]),
-							_formatTime(report[key][Position.Inclusive]/report[key][Position.Count]),
-							_formatTime(report[key][Position.MinExc]),
-							_formatTime(report[key][Position.MaxExc]),
-							_formatTime(report[key][Position.Exclusive]/report[key][Position.Count]),
+							_formatTime(reportEntry[Position.Inclusive]),
+							_formatTime(reportEntry[Position.Exclusive]),
+							reportEntry[Position.Count],
+							_formatTime(reportEntry[Position.MinInc]),
+							_formatTime(reportEntry[Position.MaxInc]),
+							_formatTime(reportEntry[Position.Inclusive] / report[key][Position.Count]),
+							_formatTime(reportEntry[Position.MinExc]),
+							_formatTime(reportEntry[Position.MaxExc]),
+							_formatTime(reportEntry[Position.Exclusive] / report[key][Position.Count]),
 						)
 					)
 					if reportMode == ReportMode.FLAT:
-						total += report[key][1]
+						total += reportEntry[Position.Exclusive]
 					else:
-						total += report[key][0]
+						total += reportEntry[Position.Inclusive]
 					_recurse(report, sortedKeys, key + "::", " \u251c\u2500 ", printed, itemfmt)
 
 				output(line)
