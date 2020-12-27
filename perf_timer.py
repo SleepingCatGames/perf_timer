@@ -112,7 +112,7 @@ _htmlHeader = """<!DOCTYPE html><HTML>
 	<BODY onload="checkScriptLoaded()">
 		<div id="errorbar" style="background-color:#ff0000"></div>
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js" onload="scriptLoaded=true;" ></script>
-		<h1>Perf Report: <i>{0}</i></h1>
+		<h1>Perf Report: <i>{0} {1}</i></h1>
 """
 
 _blocks = [
@@ -397,7 +397,6 @@ _blocks = [
 						}}
 						return false;
 					}}
-
 			</script>
 			<div>
 			<div style="border:1px solid black;padding:0px 6px">
@@ -414,7 +413,14 @@ _blocks = [
 			</div>
 			<div style="clear:left" id="stack_{0}"></div>
 			</div>
-			<script type="text/javascript">Populate_{0}(1);</script>
+			<script type="text/javascript">
+				Populate_{0}(1);
+				setTimeout(function() {{
+					var height = document.getElementsByTagName("html")[0].scrollHeight + 10;
+					console.log("Set height to " + height)
+					window.parent.postMessage(["setHeight", height], "*"); 
+				}}, 1000);
+			</script>
 		</div>
 """
 ]
@@ -436,18 +442,23 @@ class PerfTimer(object):
 
 	:param blockName: The name of the block to store execution for.
 	:type blockName: str
+	:param frame: A frame counter for frame-based programs. If this is set, the HTML output mode
+		will generate multiple pages, one for each frame, and a performance graph by frame.
+	:type frame: int or None
 	"""
 	perfQueue = deque()
 	perfStack = threading.local()
 
-	def __init__(self, blockName):
+	def __init__(self, blockName, frame=None):
 		if _collecting:
+			self.frame = frame
 			self.blockName = blockName
 			self.incstart = 0
 			self.excstart = 0
 			self.exclusive = 0
 			self.inclusive = 0
 			self.scopeName = blockName
+			self.threadId = threading.current_thread().ident
 
 	def __enter__(self):
 		if _collecting:
@@ -463,6 +474,7 @@ class PerfTimer(object):
 
 			self.incstart = now
 			self.excstart = now
+		return self
 
 	def __exit__(self, excType, excVal, excTb):
 		if _collecting:
@@ -476,11 +488,11 @@ class PerfTimer(object):
 			self.exclusive += now - self.excstart
 			self.inclusive = now - self.incstart
 
-			PerfTimer.perfQueue.append((self.scopeName, self.inclusive, self.exclusive, threading.current_thread().ident))
+			PerfTimer.perfQueue.append((self.scopeName, self.inclusive, self.exclusive, self.threadId, self.frame, self.incstart, now))
 			PerfTimer.perfStack.stack.pop()
 
 	@staticmethod
-	def PrintPerfReport(reportMode, output=None):
+	def PrintPerfReport(reportMode, output=None, name=None):
 		"""
 		Print out all the collected data from PerfTimers in a heirarchical tree
 
@@ -492,6 +504,170 @@ class PerfTimer(object):
 		:type output: None or :class:`collections.Callable` or str
 		"""
 
+		if name is None:
+			name = os.path.basename(sys.modules["__main__"].__file__)
+
+		if output is None:
+			if reportMode != ReportMode.HTML:
+				# pylint: disable=invalid-name,missing-docstring
+				def printIt(*args, **kwargs):
+					print(*args, **kwargs)
+
+				output = printIt
+			else:
+				output = os.path.basename(os.path.splitext(name)[0] + "_PERF.html")
+
+		elementsByFrame = {}
+		earliestByFrame = {}
+		latestByFrame = {}
+		allFramesQueue = deque()
+		while True:
+			try:
+				pair = PerfTimer.perfQueue.popleft()
+				frame = pair[4]
+				elementsByFrame.setdefault(frame, deque()).append(pair)
+				allFramesQueue.append(pair)
+				if frame in earliestByFrame:
+					earliestByFrame[frame] = min(earliestByFrame[frame], pair[5])
+					latestByFrame[frame] = max(latestByFrame[frame], pair[6])
+				else:
+					earliestByFrame[frame] = pair[5]
+					latestByFrame[frame] = pair[6]
+			except IndexError:
+				break
+
+		longest = 0
+		if len(elementsByFrame) != 1 and reportMode == ReportMode.HTML:
+			if not os.path.exists(os.path.join(os.path.dirname(output), "frames")):
+				os.mkdir(os.path.join(os.path.dirname(output), "frames"))
+			if __name__ == "__main__":
+				print("Generating combined frame output...")
+			PerfTimer.perfQueue = allFramesQueue
+			thisOutput = os.path.join(os.path.dirname(output), "frames", "_ALL.".join(os.path.basename(output).rsplit(".", 1)))
+			PerfTimer._printPerfReport(reportMode, thisOutput, None, name)
+
+		for key in sorted(elementsByFrame.keys()):
+			if key is not None:
+				if reportMode != ReportMode.HTML:
+					output("==============================")
+					output("Frame #{}".format(key))
+					output("==============================")
+				elif __name__ == "__main__":
+					print("Generating individual frame output for frame {}...".format(key))
+			longest = max(longest, latestByFrame[key] - earliestByFrame[key])
+			PerfTimer.perfQueue = elementsByFrame[key]
+			thisOutput = output
+			if len(elementsByFrame) != 1 and reportMode == ReportMode.HTML:
+				thisOutput = os.path.join(os.path.dirname(output), "frames", "_{}.".format(key).join(os.path.basename(output).rsplit(".", 1)))
+			PerfTimer._printPerfReport(reportMode, thisOutput, key, name)
+
+		if len(elementsByFrame) != 1 and reportMode == ReportMode.HTML:
+			if __name__ == "__main__":
+				print("Generating index file and performance graph...")
+			frameFile = os.path.join(os.path.dirname(output), "frames", "_${pn}.".join(os.path.basename(output).rsplit(".", 1))).replace("\\", "/")
+			allFramesFile = os.path.join(os.path.dirname(output), "frames", "_ALL.".join(os.path.basename(output).rsplit(".", 1))).replace("\\", "/")
+			html = """
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.44.1/plotly.js"></script>
+
+<style>
+html, body { height: 100%; }
+.js-plotly-plot .plotly .cursor-ew-resize {
+  cursor: crosshair;
+}
+#plot {
+  height: 300px;
+}
+#frameData {
+  width: 100%;
+  border: none;
+}
+</style>
+</head>
+<body>
+  <div id="plot"></div>
+  <iframe id="frameData" src=\"""" + allFramesFile + """\">
+  </iframe>
+<script type="text/javascript">
+const dataX = """ + str(list(sorted(elementsByFrame.keys()))) + """;
+const dataY = """ + str([(latestByFrame[key] - earliestByFrame[key]) * 1000 for key in sorted(elementsByFrame.keys())]) + """;
+const data = [
+  {
+    x: dataX,
+    y: dataY,
+    name: 'Performance',
+    type: 'bar'
+  },
+]
+const layout = {
+  autosize: true,
+  xaxis: {
+    automargin: true,
+    autorange: true,
+    type: 'linear',
+    title: { text: 'Frame' },
+  },
+  yaxis: {
+    automargin: true,
+    autorange: true,
+    fixedrange: true,
+    type: 'linear',
+    title: { text: 'Time (ms)' },
+  },
+  legend: { x: 0, y: 1.2, bgcolor: '#E2E2E2' },
+  title: {
+    text: "Perf Report",
+    x: 0.5,
+    y: 1.1,
+  },
+}
+
+const config = {
+  editable: false,
+  modeBarButtonsToRemove: ['sendDataToCloud'],
+  displaylogo: false,
+  locale: 'en-AU'
+}
+
+Plotly.newPlot(
+  'plot',
+  data,
+  layout,
+  config,
+);
+
+document.getElementById('plot').on('plotly_click', singleClickHandler);
+
+function singleClickHandler(data) {
+  let pn = data.points[0].pointNumber;
+  document.getElementById("frameData").src = `./""" + frameFile + """`;
+  let tn = data.points[0].curveNumber;
+  let colors = new Array(data.points[0].data.x.length).fill("#1f77b4")
+  colors[pn] = '#C54C82';
+  var update = {'marker':{color: colors, size:16}};
+  Plotly.restyle('plot', update,[tn]);
+}
+window.addEventListener('message', function(e) {
+  var frame = document.getElementById("frameData");
+  var eventName = e.data[0];
+  var data = e.data[1];
+  switch(eventName) {
+    case 'setHeight':
+      frame.style.height = data;
+      break;
+  }
+}, false);
+</script>
+</body>
+</html>
+"""
+			with open(output, "w") as f:
+				f.write(html)
+
+
+	@staticmethod
+	def _printPerfReport(reportMode, output, frameId, name):
 		fullreport = {}
 		threadreports = {}
 
@@ -546,9 +722,6 @@ class PerfTimer(object):
 			return
 
 		if reportMode == ReportMode.HTML:
-			if output is None:
-				output = os.path.basename(os.path.splitext(sys.modules["__main__"].__file__)[0] + "_PERF.html")
-
 			with open(output, "w") as f:
 				#pylint: disable=missing-docstring
 				class SharedLocals(object):
@@ -637,7 +810,6 @@ class PerfTimer(object):
 					threadScriptId = threadId.replace(" ", "_")
 					f.write(_blocks[0].format(threadScriptId, threadId))
 
-					f.write("\t\t\t\t\t\t['<{}_root>', null, 0, 0 ],\n".format(threadScriptId))
 					for key in sortedKeys:
 						parent, _, thisKey = key.rpartition("::")
 						ident = _getIdentifier(key)
@@ -645,13 +817,13 @@ class PerfTimer(object):
 						if parent:
 							f.write("'" + _getIdentifier(parent) + "', ")
 						else:
-							f.write("'<{}_root>',".format(threadScriptId))
+							f.write("null,".format(threadScriptId))
 						f.write(str(report[key][0]))
 						f.write(", ")
 						f.write(str(report[key][0]))
 						f.write("],\n")
 
-						exclusiveIdent = _getIdentifier(key + "::<" +thisKey + ">")
+						exclusiveIdent = _getIdentifier(key + "::<inside " +thisKey + ">")
 						f.write("\t\t\t\t\t\t['" + exclusiveIdent + "', ")
 						f.write("'" + ident + "', ")
 						f.write(str(max(report[key][1], 0.0000000001)))
@@ -715,26 +887,23 @@ class PerfTimer(object):
 					))
 					f.write(_blocks[2].format(threadScriptId, threadId))
 
-				f.write(_htmlHeader.format(os.path.basename(sys.modules["__main__"].__file__)))
+				f.write(_htmlHeader.format(name, " (Frame #{})".format(frameId) if frameId is not None else ""))
 
 				for threadId, report in threadreports.items():
-					if threadId == threading.current_thread().ident:
+					if threadId == threading.current_thread().ident and __name__ != "__main__":
 						continue
 					else:
 						_printReportHtml(report, "Worker Thread {}".format(threadId))
 
-				_printReportHtml(threadreports[threading.current_thread().ident], "Main Thread")
+				if threading.current_thread().ident in threadreports and __name__ != "__main__":
+					_printReportHtml(threadreports[threading.current_thread().ident], "Main Thread")
+
 				if len(threadreports) != 1:
 					_printReportHtml(fullreport, "CUMULATIVE")
 
 				f.write(_htmlFooter)
 
 		else:
-			if output is None:
-				#pylint: disable=invalid-name,missing-docstring
-				def printIt(*args, **kwargs):
-					print(*args, **kwargs)
-				output = printIt
 			output("Perf reports:")
 
 			def _recurse(report, sortedKeys, prefix, replacementText, printed, itemfmt):
@@ -853,3 +1022,147 @@ class PerfTimer(object):
 			_printReport(threadreports[threading.current_thread().ident], "Main Thread")
 			if len(threadreports) != 1:
 				_printReport(fullreport, "CUMULATIVE")
+
+if __name__ == "__main__":
+	class Operation:
+		Enter = 0
+		Exit = 1
+	if len(sys.argv) < 2:
+		print("Syntax: perf_timer.py <metricsFilename> <outputHtmlFilename> <applicationName>")
+		sys.exit(1)
+	if sys.argv[1] == "test":
+		if len(sys.argv) != 4 and len(sys.argv) != 5:
+			print("Syntax: perf_timer.py test <outputHtmlFilename> <applicationName> [threaded]")
+			sys.exit(1)
+		threads = 1
+		if len(sys.argv) == 5 and sys.argv[4] == "threaded":
+			threads = 3
+		def test(recursion, name, frame, thread):
+			import random
+			with PerfTimer(name, frame) as pt:
+				pt.threadId = thread
+				time.sleep(random.uniform(0.0001, 0.001))
+				if recursion < 5:
+					for i in range(random.randint(0, 3)):
+						test(recursion + 1, "DemoFunc_" + str(recursion) + "_" + str(i), frame, thread)
+		for i in range(1000):
+			for t in range(threads):
+				print(i)
+				test(0, "DemoFunc_0", i, t)
+	elif sys.argv[1] == "test_write_json" or sys.argv[1] == "test_write_binary":
+		if len(sys.argv) != 2 and len(sys.argv) != 3:
+			print("Syntax: perf_timer.py " + sys.argv[1] + " [threaded]")
+			sys.exit(1)
+		threads = 1
+		if len(sys.argv) == 3 and sys.argv[2] == "threaded":
+			threads = 3
+		datas = []
+		def test(recursion, name, frame, thread):
+			import random
+			import time
+			import math
+			datas.append([Operation.Enter, thread, frame, math.floor(time.time() * 1000 * 1000 * 1000), name])
+			time.sleep(random.uniform(0.0001, 0.001))
+			if recursion < 5:
+				for i in range(random.randint(0, 3)):
+					test(recursion + 1, "DemoFunc_" + str(recursion) + "_" + str(i), frame, thread)
+			datas.append([Operation.Exit, thread, frame, math.floor(time.time() * 1000 * 1000 * 1000), name])
+		for i in range(1000):
+			for t in range(threads):
+				print(i)
+				test(0, "DemoFunc_0", i, t)
+		import json
+		if sys.argv[1] == "test_write_json":
+			with open("test_json_data.json", "w") as f:
+				json.dump(datas, f)
+		else:
+			import struct
+			with open("test_binary_data.bin", "wb") as f:
+				f.write(struct.pack("L", 0xFA57))
+				f.write(struct.pack("L", len(datas)))
+				for data in datas:
+					f.write(struct.pack("=bQiQ", data[0], data[1], data[2], int(data[3])))
+					if sys.version_info[0] >= 3:
+						f.write(data[4].encode("ascii"))
+					else:
+						f.write(data[4])
+					f.write(b"\0")
+		sys.exit(0)
+	else:
+		if len(sys.argv) != 4:
+			print("Syntax: perf_timer.py metricsFilename outputHtmlFilename applicationName")
+			sys.exit(1)
+		with open(sys.argv[1], "rb") as f:
+			import struct
+
+			print("Processing file")
+			if struct.unpack("L", f.read(4))[0] == 0xFA57:
+				print("Found FA57 header. Processing as binary...")
+				recordings = []
+				count = struct.unpack("L", f.read(4))[0]
+				print("File provides {} events. Loading data...".format(count))
+				i = 0
+				for _ in range(count):
+					i += 1
+					if i % 10000 == 0:
+						print("... {}".format(i))
+					line = list(struct.unpack("=bQiQ", f.read(1+8+4+8)))
+					name = b""
+					c = f.read(1)
+					while c != b"\0":
+						name += c
+						c = f.read(1)
+					line.append(name)
+					recordings.append(line)
+				print("Data loaded, processing...")
+
+			else:
+				f.seek(0, os.SEEK_SET)
+				import json
+				print("File is not binary. Processing as JSON...")
+				recordings = json.load(f)
+				print("File provides {} events".format(len(recordings)))
+
+		stacks = {}
+		i = 0
+		for recording in recordings:
+			i += 1
+			if i % 10000 == 0:
+				print("... {}".format(i))
+			operation, threadId, frameId, timestamp, name = recording
+			timestamp /= 1000 * 1000 * 1000
+			if sys.version_info[0] >= 3 and isinstance(name, bytes):
+				name = name.decode("ascii")
+
+			if operation == Operation.Enter:
+				timer = PerfTimer(name, frameId if frameId >= 0 else None)
+				timer.threadId = threadId
+				try:
+					prev = stacks[threadId][-1]
+					prev.exclusive += timestamp - prev.excstart
+					timer.scopeName = prev.scopeName + "::" + timer.blockName
+
+					stacks[threadId].append(timer)
+				except:
+					stacks[threadId] = [timer]
+
+				timer.incstart = timestamp
+				timer.excstart = timestamp
+
+			else:
+				timer = stacks[threadId][-1]
+				try:
+					prev = stacks[threadId][-2]
+					prev.excstart = timestamp
+				except:
+					pass
+
+				timer.exclusive += timestamp - timer.excstart
+				timer.inclusive = timestamp - timer.incstart
+
+				PerfTimer.perfQueue.append(
+					(timer.scopeName, timer.inclusive, timer.exclusive, timer.threadId, timer.frame, timer.incstart, timestamp))
+				stacks[threadId].pop()
+		print("Finished processing {} events. Generating output...".format(len(recordings)))
+
+	PerfTimer.PrintPerfReport(ReportMode.HTML, sys.argv[2], sys.argv[3])
