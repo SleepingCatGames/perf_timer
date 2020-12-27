@@ -1079,10 +1079,10 @@ if __name__ == "__main__":
 		else:
 			import struct
 			with open("test_binary_data.bin", "wb") as f:
-				f.write(struct.pack("L", 0xFA57))
-				f.write(struct.pack("L", len(datas)))
+				f.write(struct.pack("<L", 0xFA57))
+				f.write(struct.pack("<L", len(datas)))
 				for data in datas:
-					f.write(struct.pack("=bQiQ", data[0], data[1], data[2], int(data[3])))
+					f.write(struct.pack("<bQiQ", data[0], data[1], data[2], int(data[3])))
 					if sys.version_info[0] >= 3:
 						f.write(data[4].encode("ascii"))
 					else:
@@ -1097,17 +1097,17 @@ if __name__ == "__main__":
 			import struct
 
 			print("Processing file")
-			if struct.unpack("L", f.read(4))[0] == 0xFA57:
+			if struct.unpack("<L", f.read(4))[0] == 0xFA57:
 				print("Found FA57 header. Processing as binary...")
 				recordings = []
-				count = struct.unpack("L", f.read(4))[0]
+				count = struct.unpack("<L", f.read(4))[0]
 				print("File provides {} events. Loading data...".format(count))
 				i = 0
 				for _ in range(count):
 					i += 1
 					if i % 10000 == 0:
 						print("... {}".format(i))
-					line = list(struct.unpack("=bQiQ", f.read(1+8+4+8)))
+					line = list(struct.unpack("<bQiQ", f.read(1+8+4+8)))
 					name = b""
 					c = f.read(1)
 					while c != b"\0":

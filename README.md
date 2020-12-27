@@ -77,7 +77,7 @@ In the HTML output mode, this will add a frame-by-frame performance graph to the
 
 If you're profiling a large number of frames and having difficulty clicking on the frame you want, you can also click and drag within the header to zoom in on a segment of the output so that you can click on the one you want more easily.
 
-####!! A word of warning !!
+#### !! A word of warning !!
 
 Running the frame-based profiler with output modes of FLAT or TREE will generate a separate ascii table PER FRAME and PER THREAD. This could result in an extremely large amount of output. It's *strongly* recommended to use frame-based profiling only with the HTML output mode.
 
@@ -135,7 +135,7 @@ Note that it is the responsibility of the application to ensure all ENTER events
 
 The binary format is similar to the JSON format, but, perhaps expectedly, is more strict. It's provided to allow for native applications to generate the output more efficiently.
 
-**Note that the binary format does not include ANY alignment padding to ensure it will work across all languages and architectures without making any assumptions about the alignment of data. Structs used to generate the metrics file should thus be packed. It is, however, assumed the output will be generated on the same system as the metrics file, so native endianness is used and it is not necessary to do any endian conversion.**
+**Note that the binary format does not include ANY alignment padding to ensure it will work across all languages and architectures without making any assumptions about the alignment of data. Structs used to generate the metrics file should thus be packed. All values should also be provided in little endian byte order, meaning if you generate the file on a big endian system, you will need to convert your values.**
 
 The overall file format is as follows:
 
