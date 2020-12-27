@@ -810,6 +810,7 @@ window.addEventListener('message', function(e) {
 					threadScriptId = threadId.replace(" ", "_")
 					f.write(_blocks[0].format(threadScriptId, threadId))
 
+					f.write("\t\t\t\t\t\t['<{}_root>', null, 0, 0 ],\n".format(threadScriptId))
 					for key in sortedKeys:
 						parent, _, thisKey = key.rpartition("::")
 						ident = _getIdentifier(key)
@@ -817,7 +818,7 @@ window.addEventListener('message', function(e) {
 						if parent:
 							f.write("'" + _getIdentifier(parent) + "', ")
 						else:
-							f.write("null,".format(threadScriptId))
+							f.write("'<{}_root>',".format(threadScriptId))
 						f.write(str(report[key][0]))
 						f.write(", ")
 						f.write(str(report[key][0]))
