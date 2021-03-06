@@ -520,9 +520,12 @@ class PerfTimer(object):
 		:param reportMode: :class:`ReportMode` enum value defining how the report is output to the user.
 		:type reportMode: int
 
-		:param output: When the report mode is "flat" or "tree, this is a function that receives each line of output (defaults to stdout when None).
+		:param output: When the report mode is "flat" or "tree", this is a function that receives each line of output (defaults to stdout when None).
 		               When the report mode is "html", this is the name of the file dumped by the report (defaults to the name of the main module file + "_PERF.html" when None).
 		:type output: None or :class:`collections.Callable` or str
+		
+		:param name: The name of the application. Running in normal python mode, this will default to the name of the __main__ module. This only affects the header in HTML mode.
+		:type name: None or str
 		"""
 
 		if name is None:
@@ -575,7 +578,7 @@ class PerfTimer(object):
 			except IndexError:
 				break
 				
-		if len(elementsByFrame) != 1 and reportMode == ReportMode.HTML:
+		if len(elementsByFrame) > 1 and reportMode == ReportMode.HTML:
 			if not os.path.exists(os.path.join(os.path.dirname(output), "frames")):
 				os.mkdir(os.path.join(os.path.dirname(output), "frames"))
 			if __name__ == "__main__":
@@ -597,11 +600,11 @@ class PerfTimer(object):
 			PerfTimer.perfQueue = elementsByFrame[key]
 			PerfTimer.annotations = annotationsByFrame[key]
 			thisOutput = output
-			if len(elementsByFrame) != 1 and reportMode == ReportMode.HTML:
+			if len(elementsByFrame) > 1 and reportMode == ReportMode.HTML:
 				thisOutput = os.path.join(os.path.dirname(output), "frames", "_{}.".format(key).join(os.path.basename(output).rsplit(".", 1)))
 			PerfTimer._printPerfReport(reportMode, thisOutput, key, name)
 
-		if len(elementsByFrame) != 1 and reportMode == ReportMode.HTML:
+		if len(elementsByFrame) > 1 and reportMode == ReportMode.HTML:
 			if __name__ == "__main__":
 				print("\nGenerating index file and performance graph...")
 			frameFile = os.path.join(os.path.dirname(output), "frames", "_${pn}.".join(os.path.basename(output).rsplit(".", 1))).replace("\\", "/")
