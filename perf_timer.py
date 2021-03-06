@@ -431,11 +431,6 @@ _blocks = [
 			</div>
 			<script type="text/javascript">
 				Populate_{0}(1);
-				setTimeout(function() {{
-					var height = document.getElementsByTagName("html")[0].scrollHeight + 10;
-					console.log("Set height to " + height)
-					window.parent.postMessage(["setHeight", height], "*"); 
-				}}, 1000);
 			</script>
 		</div>
 """
@@ -562,6 +557,7 @@ class PerfTimer(object):
 				if PerfTimer.minFrameTime is not None and (duration * 1000) < PerfTimer.minFrameTime:
 					continue
 				elementsByFrame.setdefault(frame, deque()).append(pair)
+				annotationsByFrame[frame] = deque();
 				allFramesQueue.append(pair)
 			except IndexError:
 				break
@@ -575,7 +571,7 @@ class PerfTimer(object):
 				allFramesAnnotations.append(allFramesPair)
 				# Convert timestamp to a relative timestamp for this frame
 				pair = (pair[0], pair[1], pair[2], pair[3] - earliestByFrame[frame])
-				annotationsByFrame.setdefault(frame, deque()).append(pair)
+				annotationsByFrame[frame].append(pair)
 			except IndexError:
 				break
 				
@@ -629,9 +625,9 @@ html, body { height: 100%; }
 }
 </style>
 </head>
-<body>
+<body style="height:99%;">
   <div id="plot"></div>
-  <iframe id="frameData" src=\"""" + allFramesFile + """\">
+  <iframe id="frameData" src=\"""" + allFramesFile + """\" style="height:calc(100% - 300px);">
   </iframe>
 <script type="text/javascript">
 const dataX = """ + str(list(sorted(elementsByFrame.keys()))) + """;
@@ -692,16 +688,6 @@ function singleClickHandler(data) {
   var update = {'marker':{color: colors, size:16}};
   Plotly.restyle('plot', update,[tn]);
 }
-window.addEventListener('message', function(e) {
-  var frame = document.getElementById("frameData");
-  var eventName = e.data[0];
-  var data = e.data[1];
-  switch(eventName) {
-    case 'setHeight':
-      frame.style.height = data;
-      break;
-  }
-}, false);
 </script>
 </body>
 </html>
@@ -964,7 +950,7 @@ window.addEventListener('message', function(e) {
 					_printReportHtml(threadreports[threading.current_thread().ident], "Main Thread", threading.current_thread().ident)
 
 				if len(threadreports) != 1:
-					_printReportHtml(fullreport, "CUMULATIVE")
+					_printReportHtml(fullreport, "CUMULATIVE", 0)
 
 				f.write(_htmlFooter)
 
@@ -1103,15 +1089,18 @@ if __name__ == "__main__":
 		threads = 1
 		if len(sys.argv) == 5 and sys.argv[4] == "threaded":
 			threads = 3
+		class Shared:
+			now = 0
 		def test(recursion, name, iter, frame, thread):
 			import random
 			with PerfTimer(name, frame) as pt:
 				pt.threadId = thread
-				time.sleep(random.uniform(0.0001, 0.001))
-				if recursion < 5:
+				Shared.now += random.randint(10000, 20000)
+				if recursion < 3:
 					for i in range(random.randint(0, 3)):
 						test(recursion + 1, "DemoFunc_{}_{}_{}".format(iter, recursion, i), frame, thread)
-		for i in range(1000):
+				Shared.now += random.randint(10000, 20000)
+		for i in range(100):
 			for t in range(threads):
 				print(i)
 				for j in range(3):
@@ -1124,16 +1113,19 @@ if __name__ == "__main__":
 		if len(sys.argv) == 3 and sys.argv[2] == "threaded":
 			threads = 3
 		datas = []
+		class Shared:
+			now = 0
 		def test(recursion, name, iter, frame, thread):
 			import random
 			import time
 			import math
-			datas.append([Operation.Enter, thread, frame, math.floor(time.time() * 1000 * 1000 * 1000), name])
-			time.sleep(random.uniform(0.0001, 0.001))
-			if recursion < 5:
+			datas.append([Operation.Enter, thread, frame, Shared.now, name])
+			Shared.now += random.randint(10000, 20000)
+			if recursion < 3:
 				for i in range(random.randint(0, 3)):
-					test(recursion + 1, "DemoFunc_{}_{}_{}".format(iter, recursion, i), frame, thread)
-			datas.append([Operation.Exit, thread, frame, math.floor(time.time() * 1000 * 1000 * 1000), name])
+					test(recursion + 1, "DemoFunc_{}_{}_{}".format(iter, recursion, i), iter, frame, thread)
+			Shared.now += random.randint(10000, 20000)
+			datas.append([Operation.Exit, thread, frame, Shared.now, name])
 		for i in range(100):
 			for t in range(threads):
 				print(i)

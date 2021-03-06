@@ -162,7 +162,7 @@ Example binary data:
 
 # Samples
 
-The `samples` directory in the tree includes some randomly-generated examples of the HTML output, as well as example binary and json files containing example data.
+The `sample_output` directory in the tree includes some randomly-generated examples of the HTML output, as well as example binary and json files containing example data.
 
 If you use the 010 editor by SweetScape, the example data can be viewed using the following template definition (as shown in the screenshot above):
 

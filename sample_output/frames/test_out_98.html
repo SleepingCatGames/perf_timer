@@ -1,0 +1,1994 @@
+<!DOCTYPE html><HTML>
+	<HEAD>
+		<title>Perf report for Test</title>
+		<script type="text/javascript">
+			var scriptLoaded = false;
+			function checkScriptLoaded() {
+				if (!scriptLoaded) {
+					document.getElementById("errorbar").innerHTML="Could not contact gstatic.com to access google charts API.Tree maps will not be available until connection is restored.";
+				}
+			}
+			function _width(s, w) {
+				s = "0000" + s
+				return s.substring(s.length - w)
+			}
+			function numberWithCommas(x) {
+				return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+			function _formatTime(totaltime, globaltotal){
+				msec = Math.floor(totaltime*1000);
+				usec = Math.floor((totaltime - Math.floor(totaltime))*100000)
+				ret = numberWithCommas(msec) + "." + _width(usec, 2)
+				if(globaltotal !== undefined)
+				{
+					ret += ' (' + Math.min(100,totaltime/globaltotal * 100).toFixed(2) + '%)'
+				}
+				return ret;
+			}
+		</script>
+		<style>
+			.hoversort {
+			 	cursor: pointer; cursor: hand;
+			}
+			.hoversort:hover{
+				color:blue;
+			}
+			.percentbar {
+				height:22px;
+				background-color:#a060ff;
+				margin-top:-22px;
+
+			}
+
+			.gradient {
+				background: rgba(235,233,249,1);
+				background: -moz-linear-gradient(top, rgba(235,233,249,1) 0%, rgba(216,208,239,1) 50%, rgba(206,199,236,1) 51%, rgba(193,191,234,1) 100%);
+				background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(235,233,249,1)), color-stop(50%, rgba(216,208,239,1)), color-stop(51%, rgba(206,199,236,1)), color-stop(100%, rgba(193,191,234,1)));
+				background: -webkit-linear-gradient(top, rgba(235,233,249,1) 0%, rgba(216,208,239,1) 50%, rgba(206,199,236,1) 51%, rgba(193,191,234,1) 100%);
+				background: -o-linear-gradient(top, rgba(235,233,249,1) 0%, rgba(216,208,239,1) 50%, rgba(206,199,236,1) 51%, rgba(193,191,234,1) 100%);
+				background: -ms-linear-gradient(top, rgba(235,233,249,1) 0%, rgba(216,208,239,1) 50%, rgba(206,199,236,1) 51%, rgba(193,191,234,1) 100%);
+				background: linear-gradient(to bottom, rgba(235,233,249,1) 0%, rgba(216,208,239,1) 50%, rgba(206,199,236,1) 51%, rgba(193,191,234,1) 100%);
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ebe9f9', endColorstr='#c1bfea', GradientType=0 );
+			}
+		</style>
+	</HEAD>
+	<BODY onload="checkScriptLoaded()">
+		<div id="errorbar" style="background-color:#ff0000"></div>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js" onload="scriptLoaded=true;" ></script>
+		<h1>Perf Report: <i>Test  (Frame #98)</i></h1>
+		<div style="margin:2px 10px;padding: 5px 10px;background-color:lavender;border: 1px solid grey;">
+			<h3>Worker Thread 0</h3>
+
+			<div id="chart_div_Worker_Thread_0"></div>
+			<script type="text/javascript">
+				google.charts.load("current", {"packages":["treemap"]});
+				google.charts.setOnLoadCallback(drawChart);
+				function drawChart() {
+					var data = new google.visualization.DataTable();
+					data.addColumn("string", "ID");
+					data.addColumn("string", "Parent");
+					data.addColumn("number", "Exclusive time in milliseconds");
+					data.addColumn("number", "Inclusive time in milliseconds");
+					data.addRows([
+						['<Worker_Thread_0_root>', null, 0, 0 ],
+						['DemoFunc_1_2_0', 'DemoFunc_1_1_0', 3.915199999998675e-05, 3.915199999998675e-05],
+						['<inside DemoFunc_1_2_0>', 'DemoFunc_1_2_0', 3.915199999998675e-05, 3.915199999998675e-05],
+						['DemoFunc_0_0', '<Worker_Thread_0_root>',0.0002594380000000007, 0.0002594380000000007],
+						['<inside DemoFunc_0_0>', 'DemoFunc_0_0', 3.8093999999988526e-05, 3.8093999999988526e-05],
+						['DemoFunc_2_0_1', 'DemoFunc_0_2', 0.00027861400000001035, 0.00027861400000001035],
+						['<inside DemoFunc_2_0_1>', 'DemoFunc_2_0_1', 3.741600000001233e-05, 3.741600000001233e-05],
+						['DemoFunc_2_2_1', 'DemoFunc_2_1_0', 3.687299999999283e-05, 3.687299999999283e-05],
+						['<inside DemoFunc_2_2_1>', 'DemoFunc_2_2_1', 3.687299999999283e-05, 3.687299999999283e-05],
+						['DemoFunc_0_1_0', 'DemoFunc_0_0_0', 0.00010279400000001715, 0.00010279400000001715],
+						['<inside DemoFunc_0_1_0>', 'DemoFunc_0_1_0', 3.627000000000491e-05, 3.627000000000491e-05],
+						['DemoFunc_0_2_0', 'DemoFunc_0_1_1', 3.4957000000002125e-05, 3.4957000000002125e-05],
+						['<inside DemoFunc_0_2_0>', 'DemoFunc_0_2_0', 3.4957000000002125e-05, 3.4957000000002125e-05],
+						['DemoFunc_0_2_0\x0b', 'DemoFunc_0_1_0', 3.406000000000242e-05, 3.406000000000242e-05],
+						['<inside DemoFunc_0_2_0>\x0b', 'DemoFunc_0_2_0\x0b', 3.406000000000242e-05, 3.406000000000242e-05],
+						['DemoFunc_1_0_0', 'DemoFunc_0_1', 0.00012793599999999516, 0.00012793599999999516],
+						['<inside DemoFunc_1_0_0>', 'DemoFunc_1_0_0', 3.36759999999825e-05, 3.36759999999825e-05],
+						['DemoFunc_2_1_0', 'DemoFunc_2_0_1', 9.976800000000008e-05, 9.976800000000008e-05],
+						['<inside DemoFunc_2_1_0>', 'DemoFunc_2_1_0', 3.363300000000513e-05, 3.363300000000513e-05],
+						['DemoFunc_1_2_1', 'DemoFunc_1_1_0', 3.321600000000258e-05, 3.321600000000258e-05],
+						['<inside DemoFunc_1_2_1>', 'DemoFunc_1_2_1', 3.321600000000258e-05, 3.321600000000258e-05],
+						['DemoFunc_2_0_0', 'DemoFunc_0_2', 3.287599999998725e-05, 3.287599999998725e-05],
+						['<inside DemoFunc_2_0_0>', 'DemoFunc_2_0_0', 3.287599999998725e-05, 3.287599999998725e-05],
+						['DemoFunc_0_2_1', 'DemoFunc_0_1_0', 3.246400000000982e-05, 3.246400000000982e-05],
+						['<inside DemoFunc_0_2_1>', 'DemoFunc_0_2_1', 3.246400000000982e-05, 3.246400000000982e-05],
+						['DemoFunc_2_2_0', 'DemoFunc_2_1_2', 3.1281000000021875e-05, 3.1281000000021875e-05],
+						['<inside DemoFunc_2_2_0>', 'DemoFunc_2_2_0', 3.1281000000021875e-05, 3.1281000000021875e-05],
+						['DemoFunc_0_0_0', 'DemoFunc_0_0', 0.0002213440000000122, 0.0002213440000000122],
+						['<inside DemoFunc_0_0_0>', 'DemoFunc_0_0_0', 3.124600000001254e-05, 3.124600000001254e-05],
+						['DemoFunc_2_1_1', 'DemoFunc_2_0_1', 8.43100000000041e-05, 8.43100000000041e-05],
+						['<inside DemoFunc_2_1_1>', 'DemoFunc_2_1_1', 3.1057000000001e-05, 3.1057000000001e-05],
+						['DemoFunc_2_2_0\x0b', 'DemoFunc_2_1_0', 2.926200000000212e-05, 2.926200000000212e-05],
+						['<inside DemoFunc_2_2_0>\x0b', 'DemoFunc_2_2_0\x0b', 2.926200000000212e-05, 2.926200000000212e-05],
+						['DemoFunc_2_2_0\x0b\x0b', 'DemoFunc_2_1_1', 2.9063999999995316e-05, 2.9063999999995316e-05],
+						['<inside DemoFunc_2_2_0>\x0b\x0b', 'DemoFunc_2_2_0\x0b\x0b', 2.9063999999995316e-05, 2.9063999999995316e-05],
+						['DemoFunc_0_2', '<Worker_Thread_0_root>',0.00033953700000000087, 0.00033953700000000087],
+						['<inside DemoFunc_0_2>', 'DemoFunc_0_2', 2.8047000000003264e-05, 2.8047000000003264e-05],
+						['DemoFunc_0_1', '<Worker_Thread_0_root>',0.00015578500000001938, 0.00015578500000001938],
+						['<inside DemoFunc_0_1>', 'DemoFunc_0_1', 2.7849000000024215e-05, 2.7849000000024215e-05],
+						['DemoFunc_0_1_1', 'DemoFunc_0_0_0', 8.73039999999825e-05, 8.73039999999825e-05],
+						['<inside DemoFunc_0_1_1>', 'DemoFunc_0_1_1', 2.7452999999982852e-05, 2.7452999999982852e-05],
+						['DemoFunc_2_1_2', 'DemoFunc_2_0_1', 5.711999999999384e-05, 5.711999999999384e-05],
+						['<inside DemoFunc_2_1_2>', 'DemoFunc_2_1_2', 2.5838999999971968e-05, 2.5838999999971968e-05],
+						['DemoFunc_0_2_1\x0b', 'DemoFunc_0_1_1', 2.489399999999753e-05, 2.489399999999753e-05],
+						['<inside DemoFunc_0_2_1>\x0b', 'DemoFunc_0_2_1\x0b', 2.489399999999753e-05, 2.489399999999753e-05],
+						['DemoFunc_2_2_1\x0b', 'DemoFunc_2_1_1', 2.4189000000007788e-05, 2.4189000000007788e-05],
+						['<inside DemoFunc_2_2_1>\x0b', 'DemoFunc_2_2_1\x0b', 2.4189000000007788e-05, 2.4189000000007788e-05],
+						['DemoFunc_1_1_0', 'DemoFunc_1_0_0', 9.426000000001267e-05, 9.426000000001267e-05],
+						['<inside DemoFunc_1_1_0>', 'DemoFunc_1_1_0', 2.1892000000023337e-05, 2.1892000000023337e-05],
+						['<unknown>', '<Worker_Thread_0_root>',0.0, 0.0],
+						['<inside <unknown>>', '<unknown>', 1e-10, 1e-10],
+					]);
+					var tree = new google.visualization.TreeMap(document.getElementById("chart_div_Worker_Thread_0"));
+					function showFullTooltip(row, size, value) {
+						return '<div style="background:#fd9; padding:10px; border-style:solid">' +
+						'<span style="font-family:Courier"><b>' +
+						data.getValue(row, 0).split("").join("").split("<").join("&lt;").split(">").join("&gt;")
+						+ ':</b>' + _formatTime(data.getValue(row, 2)) + ' ms</span></div>'
+					}
+					var options = {
+						highlightOnMouseOver: true,
+						maxDepth: 1,
+						maxPostDepth: 20,
+						minHighlightColor: "#80a0ff",
+						midHighlightColor: "#ffffff",
+						maxHighlightColor: "#ff0000",
+						minColor: "#7390E6",
+						midColor: "#E6E6E6",
+						maxColor: "#e60000",
+						headerHeight: 15,
+						showScale: false,
+						height: 500,
+						useWeightedAverageForAggregation: true,
+						generateTooltip: showFullTooltip
+					};
+					tree.draw(data, options);
+				}
+			</script>
+			<script type="text/javascript">
+				var datas_Worker_Thread_0 = [
+					[ "DemoFunc_0_0", 0.0002594380000000007, 3.8093999999988526e-05, 1, 0.0002594380000000007, 0.0002594380000000007, 0.0002594380000000007, 3.8093999999988526e-05, 3.8093999999988526e-05, 3.8093999999988526e-05,
+						[
+							[ "DemoFunc_0_0_0", 0.0002213440000000122, 3.124600000001254e-05, 1, 0.0002213440000000122, 0.0002213440000000122, 0.0002213440000000122, 3.124600000001254e-05, 3.124600000001254e-05, 3.124600000001254e-05,
+								[
+									[ "DemoFunc_0_1_0", 0.00010279400000001715, 3.627000000000491e-05, 1, 0.00010279400000001715, 0.00010279400000001715, 0.00010279400000001715, 3.627000000000491e-05, 3.627000000000491e-05, 3.627000000000491e-05,
+										[
+											[ "DemoFunc_0_2_0", 3.406000000000242e-05, 3.406000000000242e-05, 1, 3.406000000000242e-05, 3.406000000000242e-05, 3.406000000000242e-05, 3.406000000000242e-05, 3.406000000000242e-05, 3.406000000000242e-05,
+												[]
+											],
+
+											[ "DemoFunc_0_2_1", 3.246400000000982e-05, 3.246400000000982e-05, 1, 3.246400000000982e-05, 3.246400000000982e-05, 3.246400000000982e-05, 3.246400000000982e-05, 3.246400000000982e-05, 3.246400000000982e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_0_1_1", 8.73039999999825e-05, 2.7452999999982852e-05, 1, 8.73039999999825e-05, 8.73039999999825e-05, 8.73039999999825e-05, 2.7452999999982852e-05, 2.7452999999982852e-05, 2.7452999999982852e-05,
+										[
+											[ "DemoFunc_0_2_0", 3.4957000000002125e-05, 3.4957000000002125e-05, 1, 3.4957000000002125e-05, 3.4957000000002125e-05, 3.4957000000002125e-05, 3.4957000000002125e-05, 3.4957000000002125e-05, 3.4957000000002125e-05,
+												[]
+											],
+
+											[ "DemoFunc_0_2_1", 2.489399999999753e-05, 2.489399999999753e-05, 1, 2.489399999999753e-05, 2.489399999999753e-05, 2.489399999999753e-05, 2.489399999999753e-05, 2.489399999999753e-05, 2.489399999999753e-05,
+												[]
+											]
+										]
+									]
+								]
+							]
+						]
+					],
+					[ "DemoFunc_0_2", 0.00033953700000000087, 2.8047000000003264e-05, 1, 0.00033953700000000087, 0.00033953700000000087, 0.00033953700000000087, 2.8047000000003264e-05, 2.8047000000003264e-05, 2.8047000000003264e-05,
+						[
+							[ "DemoFunc_2_0_1", 0.00027861400000001035, 3.741600000001233e-05, 1, 0.00027861400000001035, 0.00027861400000001035, 0.00027861400000001035, 3.741600000001233e-05, 3.741600000001233e-05, 3.741600000001233e-05,
+								[
+									[ "DemoFunc_2_1_0", 9.976800000000008e-05, 3.363300000000513e-05, 1, 9.976800000000008e-05, 9.976800000000008e-05, 9.976800000000008e-05, 3.363300000000513e-05, 3.363300000000513e-05, 3.363300000000513e-05,
+										[
+											[ "DemoFunc_2_2_1", 3.687299999999283e-05, 3.687299999999283e-05, 1, 3.687299999999283e-05, 3.687299999999283e-05, 3.687299999999283e-05, 3.687299999999283e-05, 3.687299999999283e-05, 3.687299999999283e-05,
+												[]
+											],
+
+											[ "DemoFunc_2_2_0", 2.926200000000212e-05, 2.926200000000212e-05, 1, 2.926200000000212e-05, 2.926200000000212e-05, 2.926200000000212e-05, 2.926200000000212e-05, 2.926200000000212e-05, 2.926200000000212e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_2_1_1", 8.43100000000041e-05, 3.1057000000001e-05, 1, 8.43100000000041e-05, 8.43100000000041e-05, 8.43100000000041e-05, 3.1057000000001e-05, 3.1057000000001e-05, 3.1057000000001e-05,
+										[
+											[ "DemoFunc_2_2_0", 2.9063999999995316e-05, 2.9063999999995316e-05, 1, 2.9063999999995316e-05, 2.9063999999995316e-05, 2.9063999999995316e-05, 2.9063999999995316e-05, 2.9063999999995316e-05, 2.9063999999995316e-05,
+												[]
+											],
+
+											[ "DemoFunc_2_2_1", 2.4189000000007788e-05, 2.4189000000007788e-05, 1, 2.4189000000007788e-05, 2.4189000000007788e-05, 2.4189000000007788e-05, 2.4189000000007788e-05, 2.4189000000007788e-05, 2.4189000000007788e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_2_1_2", 5.711999999999384e-05, 2.5838999999971968e-05, 1, 5.711999999999384e-05, 5.711999999999384e-05, 5.711999999999384e-05, 2.5838999999971968e-05, 2.5838999999971968e-05, 2.5838999999971968e-05,
+										[
+											[ "DemoFunc_2_2_0", 3.1281000000021875e-05, 3.1281000000021875e-05, 1, 3.1281000000021875e-05, 3.1281000000021875e-05, 3.1281000000021875e-05, 3.1281000000021875e-05, 3.1281000000021875e-05, 3.1281000000021875e-05,
+												[]
+											]
+										]
+									]
+								]
+							],
+
+							[ "DemoFunc_2_0_0", 3.287599999998725e-05, 3.287599999998725e-05, 1, 3.287599999998725e-05, 3.287599999998725e-05, 3.287599999998725e-05, 3.287599999998725e-05, 3.287599999998725e-05, 3.287599999998725e-05,
+								[]
+							]
+						]
+					],
+					[ "DemoFunc_0_1", 0.00015578500000001938, 2.7849000000024215e-05, 1, 0.00015578500000001938, 0.00015578500000001938, 0.00015578500000001938, 2.7849000000024215e-05, 2.7849000000024215e-05, 2.7849000000024215e-05,
+						[
+							[ "DemoFunc_1_0_0", 0.00012793599999999516, 3.36759999999825e-05, 1, 0.00012793599999999516, 0.00012793599999999516, 0.00012793599999999516, 3.36759999999825e-05, 3.36759999999825e-05, 3.36759999999825e-05,
+								[
+									[ "DemoFunc_1_1_0", 9.426000000001267e-05, 2.1892000000023337e-05, 1, 9.426000000001267e-05, 9.426000000001267e-05, 9.426000000001267e-05, 2.1892000000023337e-05, 2.1892000000023337e-05, 2.1892000000023337e-05,
+										[
+											[ "DemoFunc_1_2_0", 3.915199999998675e-05, 3.915199999998675e-05, 1, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05,
+												[]
+											],
+
+											[ "DemoFunc_1_2_1", 3.321600000000258e-05, 3.321600000000258e-05, 1, 3.321600000000258e-05, 3.321600000000258e-05, 3.321600000000258e-05, 3.321600000000258e-05, 3.321600000000258e-05, 3.321600000000258e-05,
+												[]
+											]
+										]
+									]
+								]
+							]
+						]
+					],
+					[ "<unknown>", 0.0, 0.0, 2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+						[]
+					]
+				]
+				var totals_Worker_Thread_0 = [0.000754760000000021, 26, 0.00033953700000000087, 0.00033953700000000087, 0.00033953700000000087, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05]
+				function HideChildren_Worker_Thread_0(parentId) {
+						className = 'Worker_Thread_0_Parent_' + parentId
+						elems = document.getElementsByClassName(className)
+						arrowElem = document.getElementById("arrow_Worker_Thread_0_"+parentId)
+						for(var i = 0; i < elems.length; ++i) {
+							var elem = elems[i]
+							if(elem.style.maxHeight == '0px') {
+								elem.style.maxHeight=elem.rememberMaxHeight
+								arrowElem.innerHTML = '&#x25bc;'
+							}
+							else
+							{
+								elem.style.maxHeight='0px'
+								arrowElem.innerHTML = '&#x25b6;'
+							}
+						}
+					}
+
+					var mode_Worker_Thread_0 = "tree"
+
+					function Flatten_Worker_Thread_0() {
+						ret = {}
+						function recurse(datas) {
+							if(datas.length == 0) {
+								return;
+							}
+							for(var i = 0; i < datas.length; ++i) {
+								if(datas[i][0] in ret) {
+									item = ret[datas[i][0]]
+									item[0] += datas[i][1]
+									item[1] += datas[i][2]
+									item[2] += datas[i][3]
+									item[3] += datas[i][4]
+									item[4] += datas[i][5]
+									item[5] += datas[i][6]
+									item[6] += datas[i][7]
+									item[7] += datas[i][8]
+									item[8] += datas[i][9]
+								}
+								else {
+									ret[datas[i][0]] = [
+										datas[i][1],
+										datas[i][2],
+										datas[i][3],
+										datas[i][4],
+										datas[i][5],
+										datas[i][6],
+										datas[i][7],
+										datas[i][8],
+										datas[i][9]
+									];
+								}
+								recurse(datas[i][10]);
+							}
+						}
+						recurse(datas_Worker_Thread_0);
+						retArray = []
+						for(var key in ret) {
+							item = ret[key]
+							retArray.push([
+								key,
+								item[0],
+								item[1],
+								item[2],
+								item[3],
+								item[4],
+								item[5],
+								item[6],
+								item[7],
+								item[8],
+								[]
+							]);
+						}
+						return retArray;
+					}
+					
+					function escapeHtml(unsafe) {
+						return unsafe
+							 .replace(/&/g, "&amp;")
+							 .replace(/</g, "&lt;")
+							 .replace(/>/g, "&gt;")
+							 .replace(/"/g, "&quot;")
+							 .replace(/'/g, "&#039;");
+					}
+
+					var prevSortKey_Worker_Thread_0 = 1
+					var prevSortType_Worker_Thread_0 = -1
+					var maxId_Worker_Thread_0 = -1
+					function Populate_Worker_Thread_0(sortKey) {
+						var sortType = 1
+						if(sortKey == 0) {
+							sortType = -1
+						}
+						if(prevSortKey_Worker_Thread_0 == sortKey && prevSortType_Worker_Thread_0 == sortType) {
+							sortType *= -1
+						}
+						prevSortKey_Worker_Thread_0 = sortKey
+						prevSortType_Worker_Thread_0 = sortType
+
+						elem = document.getElementById("stack_Worker_Thread_0")
+						bg1 = "#DFDFF2"
+						bg2 = "#D3D3E6"
+						var s = '<div style="border:1px solid black"><div style="font-weight:bold;border-bottom:1px solid black;" class="gradient">'
+						s += '<span class="hoversort" style="width:37%;display:inline-block;text-align:center;" onclick="Populate_Worker_Thread_0(0)">Block</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_0(1)">Inclusive</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_0(2)">Exclusive</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_0(3)">Count</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_0(4)">Inclusive Max</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_0(5)">Inclusive Min</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_0(6)">Inclusive Mean</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_0(7)">Exclusive Max</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_0(8)">Exclusive Min</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_0(9)">Exclusive Mean</span>'
+						s += '</div>'
+						var id = 1
+						function recurse(oneLevel, depth, parentId) {
+							oneLevel = oneLevel.sort(function(a, b) {
+								var x = a[sortKey]; var y = b[sortKey];
+								return ((x < y) ? 1 : ((x > y) ? -1 : 0)) * sortType;
+							});
+							for(var i=0; i < oneLevel.length; ++i) {
+								var thisId = id;
+								id += 1;
+								if(thisId %2 == 0) {
+									bg1 = "#C8C6F2"
+									bg2 = "#B3B1D9"
+								}
+								else {
+									bg1 = "#BDBBE6"
+									bg2 = "#A8A7CC"
+								}
+								s += '<div style="width:100%;overflow:hidden;transition:max-height 0.5s linear" class="Worker_Thread_0_Parent_'+parentId+'", id="Worker_Thread_0_'+thisId+'">'
+								s += '<div style="line-height:22px;"><span style="height:100%;width:37%;display:inline-block;background-color:'+bg1+'" '
+								if(oneLevel[i][10].length != 0) {
+									s += 'class="hoversort" onclick="HideChildren_Worker_Thread_0(\''+thisId+'\')"'
+								}
+								s += '><span style="width:20px;display:inline-block;margin-left:' + (depth * 15) + 'px;" id="arrow_Worker_Thread_0_'+thisId+'">'
+								if(oneLevel[i][10].length != 0) {
+									s += '&#x25bc;'
+								}
+								s += '</span>' + escapeHtml(oneLevel[i][0]) + '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][1], totals_Worker_Thread_0[0])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][1]/totals_Worker_Thread_0[0] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][2], totals_Worker_Thread_0[0])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][2]/totals_Worker_Thread_0[0] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + oneLevel[i][3] + ' (' + Math.min(100,oneLevel[i][3]/totals_Worker_Thread_0[1] * 100).toFixed(2) + '%)'
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][3]/totals_Worker_Thread_0[1] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][4], totals_Worker_Thread_0[2])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][4]/totals_Worker_Thread_0[2] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][5], totals_Worker_Thread_0[3])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][5]/totals_Worker_Thread_0[3] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][6], totals_Worker_Thread_0[4])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][6]/totals_Worker_Thread_0[4] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][7], totals_Worker_Thread_0[5])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][7]/totals_Worker_Thread_0[5] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][8], totals_Worker_Thread_0[6])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][8]/totals_Worker_Thread_0[6] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][9], totals_Worker_Thread_0[7])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][9]/totals_Worker_Thread_0[7] * 100) + '%;"></div>'
+								s += '</span></div>'
+								recurse(oneLevel[i][10], depth + 1, thisId)
+								s += "</div>"
+							}
+						}
+						var datas;
+						if(mode_Worker_Thread_0 == "flat") {
+							datas = Flatten_Worker_Thread_0();
+						}
+						else {
+							datas = datas_Worker_Thread_0;
+						}
+						recurse(datas, 0, 0)
+						s += '</div>'
+						s += ''
+						elem.innerHTML = s
+						for(var i = 0; i < id; ++i) {
+							className = 'Worker_Thread_0_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight = Math.max(22, elem.clientHeight) + "px"
+								elem.rememberMaxHeight = elem.style.maxHeight
+							}
+						}
+						maxId_Worker_Thread_0 = id
+					}
+
+					function ExpandAll_Worker_Thread_0() {
+						for(var i = 1; i < maxId_Worker_Thread_0; ++i) {
+							className = 'Worker_Thread_0_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							arrowElem = document.getElementById("arrow_Worker_Thread_0_"+i)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight=elem.rememberMaxHeight
+								arrowElem.innerHTML = '&#x25bc;'
+							}
+						}
+						return false;
+					}
+
+					function CollapseAll_Worker_Thread_0() {
+						for(var i = 1; i < maxId_Worker_Thread_0; ++i) {
+							className = 'Worker_Thread_0_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							arrowElem = document.getElementById("arrow_Worker_Thread_0_"+i)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight='0px'
+								arrowElem.innerHTML = '&#x25b6;'
+							}
+						}
+						return false;
+					}
+
+					function RenderTreeView_Worker_Thread_0() {
+						if(mode_Worker_Thread_0 != "tree") {
+							mode_Worker_Thread_0 = "tree";
+							prevSortType_Worker_Thread_0 *= -1
+							Populate_Worker_Thread_0(prevSortKey_Worker_Thread_0)
+							elem = document.getElementById("expandcollapse_Worker_Thread_0")
+							elem.style.opacity = 100
+							elem.style.visibility = "visible"
+						}
+						return false;
+					}
+
+					function RenderFlatView_Worker_Thread_0() {
+						if(mode_Worker_Thread_0 != "flat") {
+							mode_Worker_Thread_0 = "flat";
+							prevSortType_Worker_Thread_0 *= -1
+							Populate_Worker_Thread_0(prevSortKey_Worker_Thread_0)
+							elem = document.getElementById("expandcollapse_Worker_Thread_0")
+							elem.style.opacity = 0
+							elem.style.visibility = "hidden"
+						}
+						return false;
+					}
+			</script>
+			<div>
+			<div style="border:1px solid black;padding:0px 6px">
+				<div style="float:left;transition:opacity 0.5s, visibility 0.5s" id="expandcollapse_Worker_Thread_0">
+					<a href="javascript:;" onclick="ExpandAll_Worker_Thread_0()">expand all</a> |
+					<a href="javascript:;" onclick="CollapseAll_Worker_Thread_0()">collapse all</a>
+				</div>
+				&nbsp;
+				<div style="float:right">
+					View as:
+					<a href="javascript:;" onclick="RenderTreeView_Worker_Thread_0()">tree</a> |
+					<a href="javascript:;" onclick="RenderFlatView_Worker_Thread_0()">flat</a>
+				</div>
+			</div>
+			<div style="clear:left" id="stack_Worker_Thread_0"></div>
+			</div>
+			<script type="text/javascript">
+				Populate_Worker_Thread_0(1);
+			</script>
+		</div>
+		<div style="margin:2px 10px;padding: 5px 10px;background-color:lavender;border: 1px solid grey;">
+			<h3>Worker Thread 1</h3>
+
+			<div id="chart_div_Worker_Thread_1"></div>
+			<script type="text/javascript">
+				google.charts.load("current", {"packages":["treemap"]});
+				google.charts.setOnLoadCallback(drawChart);
+				function drawChart() {
+					var data = new google.visualization.DataTable();
+					data.addColumn("string", "ID");
+					data.addColumn("string", "Parent");
+					data.addColumn("number", "Exclusive time in milliseconds");
+					data.addColumn("number", "Inclusive time in milliseconds");
+					data.addRows([
+						['<Worker_Thread_1_root>', null, 0, 0 ],
+						['DemoFunc_0_2', '<Worker_Thread_1_root>',6.68129999999989e-05, 6.68129999999989e-05],
+						['<inside DemoFunc_0_2>', 'DemoFunc_0_2', 3.444500000002182e-05, 3.444500000002182e-05],
+						['DemoFunc_1_0_0', 'DemoFunc_0_1', 3.318899999998903e-05, 3.318899999998903e-05],
+						['<inside DemoFunc_1_0_0>', 'DemoFunc_1_0_0', 3.318899999998903e-05, 3.318899999998903e-05],
+						['DemoFunc_0_1', '<Worker_Thread_1_root>',6.615000000001481e-05, 6.615000000001481e-05],
+						['<inside DemoFunc_0_1>', 'DemoFunc_0_1', 3.2961000000025775e-05, 3.2961000000025775e-05],
+						['DemoFunc_2_0_0', 'DemoFunc_0_2', 3.236799999997708e-05, 3.236799999997708e-05],
+						['<inside DemoFunc_2_0_0>', 'DemoFunc_2_0_0', 3.236799999997708e-05, 3.236799999997708e-05],
+						['DemoFunc_0_0', '<Worker_Thread_1_root>',3.0036999999982772e-05, 3.0036999999982772e-05],
+						['<inside DemoFunc_0_0>', 'DemoFunc_0_0', 3.0036999999982772e-05, 3.0036999999982772e-05],
+						['<unknown>', '<Worker_Thread_1_root>',0.0, 0.0],
+						['<inside <unknown>>', '<unknown>', 1e-10, 1e-10],
+					]);
+					var tree = new google.visualization.TreeMap(document.getElementById("chart_div_Worker_Thread_1"));
+					function showFullTooltip(row, size, value) {
+						return '<div style="background:#fd9; padding:10px; border-style:solid">' +
+						'<span style="font-family:Courier"><b>' +
+						data.getValue(row, 0).split("").join("").split("<").join("&lt;").split(">").join("&gt;")
+						+ ':</b>' + _formatTime(data.getValue(row, 2)) + ' ms</span></div>'
+					}
+					var options = {
+						highlightOnMouseOver: true,
+						maxDepth: 1,
+						maxPostDepth: 20,
+						minHighlightColor: "#80a0ff",
+						midHighlightColor: "#ffffff",
+						maxHighlightColor: "#ff0000",
+						minColor: "#7390E6",
+						midColor: "#E6E6E6",
+						maxColor: "#e60000",
+						headerHeight: 15,
+						showScale: false,
+						height: 500,
+						useWeightedAverageForAggregation: true,
+						generateTooltip: showFullTooltip
+					};
+					tree.draw(data, options);
+				}
+			</script>
+			<script type="text/javascript">
+				var datas_Worker_Thread_1 = [
+					[ "DemoFunc_0_2", 6.68129999999989e-05, 3.444500000002182e-05, 1, 6.68129999999989e-05, 6.68129999999989e-05, 6.68129999999989e-05, 3.444500000002182e-05, 3.444500000002182e-05, 3.444500000002182e-05,
+						[
+							[ "DemoFunc_2_0_0", 3.236799999997708e-05, 3.236799999997708e-05, 1, 3.236799999997708e-05, 3.236799999997708e-05, 3.236799999997708e-05, 3.236799999997708e-05, 3.236799999997708e-05, 3.236799999997708e-05,
+								[]
+							]
+						]
+					],
+					[ "DemoFunc_0_1", 6.615000000001481e-05, 3.2961000000025775e-05, 1, 6.615000000001481e-05, 6.615000000001481e-05, 6.615000000001481e-05, 3.2961000000025775e-05, 3.2961000000025775e-05, 3.2961000000025775e-05,
+						[
+							[ "DemoFunc_1_0_0", 3.318899999998903e-05, 3.318899999998903e-05, 1, 3.318899999998903e-05, 3.318899999998903e-05, 3.318899999998903e-05, 3.318899999998903e-05, 3.318899999998903e-05, 3.318899999998903e-05,
+								[]
+							]
+						]
+					],
+					[ "DemoFunc_0_0", 3.0036999999982772e-05, 3.0036999999982772e-05, 1, 3.0036999999982772e-05, 3.0036999999982772e-05, 3.0036999999982772e-05, 3.0036999999982772e-05, 3.0036999999982772e-05, 3.0036999999982772e-05,
+						[]
+					],
+					[ "<unknown>", 0.0, 0.0, 2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+						[]
+					]
+				]
+				var totals_Worker_Thread_1 = [0.0009177600000000175, 33, 0.00033953700000000087, 0.00033953700000000087, 0.00033953700000000087, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05]
+				function HideChildren_Worker_Thread_1(parentId) {
+						className = 'Worker_Thread_1_Parent_' + parentId
+						elems = document.getElementsByClassName(className)
+						arrowElem = document.getElementById("arrow_Worker_Thread_1_"+parentId)
+						for(var i = 0; i < elems.length; ++i) {
+							var elem = elems[i]
+							if(elem.style.maxHeight == '0px') {
+								elem.style.maxHeight=elem.rememberMaxHeight
+								arrowElem.innerHTML = '&#x25bc;'
+							}
+							else
+							{
+								elem.style.maxHeight='0px'
+								arrowElem.innerHTML = '&#x25b6;'
+							}
+						}
+					}
+
+					var mode_Worker_Thread_1 = "tree"
+
+					function Flatten_Worker_Thread_1() {
+						ret = {}
+						function recurse(datas) {
+							if(datas.length == 0) {
+								return;
+							}
+							for(var i = 0; i < datas.length; ++i) {
+								if(datas[i][0] in ret) {
+									item = ret[datas[i][0]]
+									item[0] += datas[i][1]
+									item[1] += datas[i][2]
+									item[2] += datas[i][3]
+									item[3] += datas[i][4]
+									item[4] += datas[i][5]
+									item[5] += datas[i][6]
+									item[6] += datas[i][7]
+									item[7] += datas[i][8]
+									item[8] += datas[i][9]
+								}
+								else {
+									ret[datas[i][0]] = [
+										datas[i][1],
+										datas[i][2],
+										datas[i][3],
+										datas[i][4],
+										datas[i][5],
+										datas[i][6],
+										datas[i][7],
+										datas[i][8],
+										datas[i][9]
+									];
+								}
+								recurse(datas[i][10]);
+							}
+						}
+						recurse(datas_Worker_Thread_1);
+						retArray = []
+						for(var key in ret) {
+							item = ret[key]
+							retArray.push([
+								key,
+								item[0],
+								item[1],
+								item[2],
+								item[3],
+								item[4],
+								item[5],
+								item[6],
+								item[7],
+								item[8],
+								[]
+							]);
+						}
+						return retArray;
+					}
+					
+					function escapeHtml(unsafe) {
+						return unsafe
+							 .replace(/&/g, "&amp;")
+							 .replace(/</g, "&lt;")
+							 .replace(/>/g, "&gt;")
+							 .replace(/"/g, "&quot;")
+							 .replace(/'/g, "&#039;");
+					}
+
+					var prevSortKey_Worker_Thread_1 = 1
+					var prevSortType_Worker_Thread_1 = -1
+					var maxId_Worker_Thread_1 = -1
+					function Populate_Worker_Thread_1(sortKey) {
+						var sortType = 1
+						if(sortKey == 0) {
+							sortType = -1
+						}
+						if(prevSortKey_Worker_Thread_1 == sortKey && prevSortType_Worker_Thread_1 == sortType) {
+							sortType *= -1
+						}
+						prevSortKey_Worker_Thread_1 = sortKey
+						prevSortType_Worker_Thread_1 = sortType
+
+						elem = document.getElementById("stack_Worker_Thread_1")
+						bg1 = "#DFDFF2"
+						bg2 = "#D3D3E6"
+						var s = '<div style="border:1px solid black"><div style="font-weight:bold;border-bottom:1px solid black;" class="gradient">'
+						s += '<span class="hoversort" style="width:37%;display:inline-block;text-align:center;" onclick="Populate_Worker_Thread_1(0)">Block</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_1(1)">Inclusive</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_1(2)">Exclusive</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_1(3)">Count</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_1(4)">Inclusive Max</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_1(5)">Inclusive Min</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_1(6)">Inclusive Mean</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_1(7)">Exclusive Max</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_1(8)">Exclusive Min</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_1(9)">Exclusive Mean</span>'
+						s += '</div>'
+						var id = 1
+						function recurse(oneLevel, depth, parentId) {
+							oneLevel = oneLevel.sort(function(a, b) {
+								var x = a[sortKey]; var y = b[sortKey];
+								return ((x < y) ? 1 : ((x > y) ? -1 : 0)) * sortType;
+							});
+							for(var i=0; i < oneLevel.length; ++i) {
+								var thisId = id;
+								id += 1;
+								if(thisId %2 == 0) {
+									bg1 = "#C8C6F2"
+									bg2 = "#B3B1D9"
+								}
+								else {
+									bg1 = "#BDBBE6"
+									bg2 = "#A8A7CC"
+								}
+								s += '<div style="width:100%;overflow:hidden;transition:max-height 0.5s linear" class="Worker_Thread_1_Parent_'+parentId+'", id="Worker_Thread_1_'+thisId+'">'
+								s += '<div style="line-height:22px;"><span style="height:100%;width:37%;display:inline-block;background-color:'+bg1+'" '
+								if(oneLevel[i][10].length != 0) {
+									s += 'class="hoversort" onclick="HideChildren_Worker_Thread_1(\''+thisId+'\')"'
+								}
+								s += '><span style="width:20px;display:inline-block;margin-left:' + (depth * 15) + 'px;" id="arrow_Worker_Thread_1_'+thisId+'">'
+								if(oneLevel[i][10].length != 0) {
+									s += '&#x25bc;'
+								}
+								s += '</span>' + escapeHtml(oneLevel[i][0]) + '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][1], totals_Worker_Thread_1[0])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][1]/totals_Worker_Thread_1[0] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][2], totals_Worker_Thread_1[0])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][2]/totals_Worker_Thread_1[0] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + oneLevel[i][3] + ' (' + Math.min(100,oneLevel[i][3]/totals_Worker_Thread_1[1] * 100).toFixed(2) + '%)'
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][3]/totals_Worker_Thread_1[1] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][4], totals_Worker_Thread_1[2])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][4]/totals_Worker_Thread_1[2] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][5], totals_Worker_Thread_1[3])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][5]/totals_Worker_Thread_1[3] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][6], totals_Worker_Thread_1[4])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][6]/totals_Worker_Thread_1[4] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][7], totals_Worker_Thread_1[5])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][7]/totals_Worker_Thread_1[5] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][8], totals_Worker_Thread_1[6])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][8]/totals_Worker_Thread_1[6] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][9], totals_Worker_Thread_1[7])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][9]/totals_Worker_Thread_1[7] * 100) + '%;"></div>'
+								s += '</span></div>'
+								recurse(oneLevel[i][10], depth + 1, thisId)
+								s += "</div>"
+							}
+						}
+						var datas;
+						if(mode_Worker_Thread_1 == "flat") {
+							datas = Flatten_Worker_Thread_1();
+						}
+						else {
+							datas = datas_Worker_Thread_1;
+						}
+						recurse(datas, 0, 0)
+						s += '</div>'
+						s += ''
+						elem.innerHTML = s
+						for(var i = 0; i < id; ++i) {
+							className = 'Worker_Thread_1_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight = Math.max(22, elem.clientHeight) + "px"
+								elem.rememberMaxHeight = elem.style.maxHeight
+							}
+						}
+						maxId_Worker_Thread_1 = id
+					}
+
+					function ExpandAll_Worker_Thread_1() {
+						for(var i = 1; i < maxId_Worker_Thread_1; ++i) {
+							className = 'Worker_Thread_1_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							arrowElem = document.getElementById("arrow_Worker_Thread_1_"+i)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight=elem.rememberMaxHeight
+								arrowElem.innerHTML = '&#x25bc;'
+							}
+						}
+						return false;
+					}
+
+					function CollapseAll_Worker_Thread_1() {
+						for(var i = 1; i < maxId_Worker_Thread_1; ++i) {
+							className = 'Worker_Thread_1_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							arrowElem = document.getElementById("arrow_Worker_Thread_1_"+i)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight='0px'
+								arrowElem.innerHTML = '&#x25b6;'
+							}
+						}
+						return false;
+					}
+
+					function RenderTreeView_Worker_Thread_1() {
+						if(mode_Worker_Thread_1 != "tree") {
+							mode_Worker_Thread_1 = "tree";
+							prevSortType_Worker_Thread_1 *= -1
+							Populate_Worker_Thread_1(prevSortKey_Worker_Thread_1)
+							elem = document.getElementById("expandcollapse_Worker_Thread_1")
+							elem.style.opacity = 100
+							elem.style.visibility = "visible"
+						}
+						return false;
+					}
+
+					function RenderFlatView_Worker_Thread_1() {
+						if(mode_Worker_Thread_1 != "flat") {
+							mode_Worker_Thread_1 = "flat";
+							prevSortType_Worker_Thread_1 *= -1
+							Populate_Worker_Thread_1(prevSortKey_Worker_Thread_1)
+							elem = document.getElementById("expandcollapse_Worker_Thread_1")
+							elem.style.opacity = 0
+							elem.style.visibility = "hidden"
+						}
+						return false;
+					}
+			</script>
+			<div>
+			<div style="border:1px solid black;padding:0px 6px">
+				<div style="float:left;transition:opacity 0.5s, visibility 0.5s" id="expandcollapse_Worker_Thread_1">
+					<a href="javascript:;" onclick="ExpandAll_Worker_Thread_1()">expand all</a> |
+					<a href="javascript:;" onclick="CollapseAll_Worker_Thread_1()">collapse all</a>
+				</div>
+				&nbsp;
+				<div style="float:right">
+					View as:
+					<a href="javascript:;" onclick="RenderTreeView_Worker_Thread_1()">tree</a> |
+					<a href="javascript:;" onclick="RenderFlatView_Worker_Thread_1()">flat</a>
+				</div>
+			</div>
+			<div style="clear:left" id="stack_Worker_Thread_1"></div>
+			</div>
+			<script type="text/javascript">
+				Populate_Worker_Thread_1(1);
+			</script>
+		</div>
+		<div style="margin:2px 10px;padding: 5px 10px;background-color:lavender;border: 1px solid grey;">
+			<h3>Worker Thread 2</h3>
+
+			<div id="chart_div_Worker_Thread_2"></div>
+			<script type="text/javascript">
+				google.charts.load("current", {"packages":["treemap"]});
+				google.charts.setOnLoadCallback(drawChart);
+				function drawChart() {
+					var data = new google.visualization.DataTable();
+					data.addColumn("string", "ID");
+					data.addColumn("string", "Parent");
+					data.addColumn("number", "Exclusive time in milliseconds");
+					data.addColumn("number", "Inclusive time in milliseconds");
+					data.addRows([
+						['<Worker_Thread_2_root>', null, 0, 0 ],
+						['DemoFunc_2_0_1', 'DemoFunc_0_2', 0.00019664999999999266, 0.00019664999999999266],
+						['<inside DemoFunc_2_0_1>', 'DemoFunc_2_0_1', 3.742800000000601e-05, 3.742800000000601e-05],
+						['DemoFunc_2_1_1\x0b', 'DemoFunc_2_0_0', 3.6972999999995704e-05, 3.6972999999995704e-05],
+						['<inside DemoFunc_2_1_1>\x0b', 'DemoFunc_2_1_1\x0b', 3.6972999999995704e-05, 3.6972999999995704e-05],
+						['DemoFunc_0_2_2', 'DemoFunc_0_1_2', 3.4986000000014617e-05, 3.4986000000014617e-05],
+						['<inside DemoFunc_0_2_2>', 'DemoFunc_0_2_2', 3.4986000000014617e-05, 3.4986000000014617e-05],
+						['DemoFunc_0_1', '<Worker_Thread_2_root>',3.412099999999807e-05, 3.412099999999807e-05],
+						['<inside DemoFunc_0_1>', 'DemoFunc_0_1', 3.412099999999807e-05, 3.412099999999807e-05],
+						['DemoFunc_2_0_2', 'DemoFunc_0_2', 0.00017786699999999822, 0.00017786699999999822],
+						['<inside DemoFunc_2_0_2>', 'DemoFunc_2_0_2', 3.389700000000495e-05, 3.389700000000495e-05],
+						['DemoFunc_0_2_0\x0b', 'DemoFunc_0_1_0', 3.3559999999988044e-05, 3.3559999999988044e-05],
+						['<inside DemoFunc_0_2_0>\x0b', 'DemoFunc_0_2_0\x0b', 3.3559999999988044e-05, 3.3559999999988044e-05],
+						['DemoFunc_0_2_0\x0b\x0b', 'DemoFunc_0_1_1\x0b', 3.2786000000006865e-05, 3.2786000000006865e-05],
+						['<inside DemoFunc_0_2_0>\x0b\x0b', 'DemoFunc_0_2_0\x0b\x0b', 3.2786000000006865e-05, 3.2786000000006865e-05],
+						['DemoFunc_2_2_0\x0b\x0b\x0b', 'DemoFunc_2_1_1\x0b\x0b', 3.2666999999986235e-05, 3.2666999999986235e-05],
+						['<inside DemoFunc_2_2_0>\x0b\x0b\x0b', 'DemoFunc_2_2_0\x0b\x0b\x0b', 3.2666999999986235e-05, 3.2666999999986235e-05],
+						['DemoFunc_0_1_1', 'DemoFunc_0_0_0', 3.2376000000000626e-05, 3.2376000000000626e-05],
+						['<inside DemoFunc_0_1_1>', 'DemoFunc_0_1_1', 3.2376000000000626e-05, 3.2376000000000626e-05],
+						['DemoFunc_0_1_0\x0b', 'DemoFunc_0_0_2', 8.677299999998445e-05, 8.677299999998445e-05],
+						['<inside DemoFunc_0_1_0>\x0b', 'DemoFunc_0_1_0\x0b', 3.230799999998091e-05, 3.230799999998091e-05],
+						['DemoFunc_0_0_2', 'DemoFunc_0_0', 0.0002284999999999926, 0.0002284999999999926],
+						['<inside DemoFunc_0_0_2>', 'DemoFunc_0_0_2', 3.222299999999789e-05, 3.222299999999789e-05],
+						['DemoFunc_0_1_1\x0b', 'DemoFunc_0_0_2', 6.490000000000662e-05, 6.490000000000662e-05],
+						['<inside DemoFunc_0_1_1>\x0b', 'DemoFunc_0_1_1\x0b', 3.2113999999999754e-05, 3.2113999999999754e-05],
+						['DemoFunc_0_0', '<Worker_Thread_2_root>',0.0005583180000000021, 0.0005583180000000021],
+						['<inside DemoFunc_0_0>', 'DemoFunc_0_0', 3.187999999998414e-05, 3.187999999998414e-05],
+						['DemoFunc_2_1_1\x0b\x0b', 'DemoFunc_2_0_2', 9.504099999999016e-05, 9.504099999999016e-05],
+						['<inside DemoFunc_2_1_1>\x0b\x0b', 'DemoFunc_2_1_1\x0b\x0b', 3.186299999999309e-05, 3.186299999999309e-05],
+						['DemoFunc_2_1_0\x0b', 'DemoFunc_2_0_0', 3.1335999999992925e-05, 3.1335999999992925e-05],
+						['<inside DemoFunc_2_1_0>\x0b', 'DemoFunc_2_1_0\x0b', 3.1335999999992925e-05, 3.1335999999992925e-05],
+						['DemoFunc_0_1_2', 'DemoFunc_0_0_0', 0.00012286999999999715, 0.00012286999999999715],
+						['<inside DemoFunc_0_1_2>', 'DemoFunc_0_1_2', 3.110400000000402e-05, 3.110400000000402e-05],
+						['DemoFunc_2_2_2', 'DemoFunc_2_1_0', 3.088500000000827e-05, 3.088500000000827e-05],
+						['<inside DemoFunc_2_2_2>', 'DemoFunc_2_2_2', 3.088500000000827e-05, 3.088500000000827e-05],
+						['DemoFunc_2_2_1\x0b\x0b', 'DemoFunc_2_1_1\x0b\x0b', 3.0511000000010835e-05, 3.0511000000010835e-05],
+						['<inside DemoFunc_2_2_1>\x0b\x0b', 'DemoFunc_2_2_1\x0b\x0b', 3.0511000000010835e-05, 3.0511000000010835e-05],
+						['DemoFunc_2_1_1', 'DemoFunc_2_0_1', 3.002900000001474e-05, 3.002900000001474e-05],
+						['<inside DemoFunc_2_1_1>', 'DemoFunc_2_1_1', 3.002900000001474e-05, 3.002900000001474e-05],
+						['DemoFunc_0_0_1', 'DemoFunc_0_0', 5.536700000000061e-05, 5.536700000000061e-05],
+						['<inside DemoFunc_0_0_1>', 'DemoFunc_0_0_1', 3.0013999999994878e-05, 3.0013999999994878e-05],
+						['DemoFunc_0_2_0\x0b\x0b\x0b', 'DemoFunc_0_1_0\x0b', 2.9845000000000566e-05, 2.9845000000000566e-05],
+						['<inside DemoFunc_0_2_0>\x0b\x0b\x0b', 'DemoFunc_0_2_0\x0b\x0b\x0b', 2.9845000000000566e-05, 2.9845000000000566e-05],
+						['DemoFunc_0_2_0\x0b\x0b\x0b\x0b', 'DemoFunc_0_1_2', 2.913799999998412e-05, 2.913799999998412e-05],
+						['<inside DemoFunc_0_2_0>\x0b\x0b\x0b\x0b', 'DemoFunc_0_2_0\x0b\x0b\x0b\x0b', 2.913799999998412e-05, 2.913799999998412e-05],
+						['DemoFunc_0_2_1\x0b\x0b', 'DemoFunc_0_1_2', 2.7641999999994393e-05, 2.7641999999994393e-05],
+						['<inside DemoFunc_0_2_1>\x0b\x0b', 'DemoFunc_0_2_1\x0b\x0b', 2.7641999999994393e-05, 2.7641999999994393e-05],
+						['DemoFunc_0_1_0', 'DemoFunc_0_0_0', 6.099700000000707e-05, 6.099700000000707e-05],
+						['<inside DemoFunc_0_1_0>', 'DemoFunc_0_1_0', 2.743700000001903e-05, 2.743700000001903e-05],
+						['DemoFunc_2_1_2', 'DemoFunc_2_0_1', 2.7282999999989066e-05, 2.7282999999989066e-05],
+						['<inside DemoFunc_2_1_2>', 'DemoFunc_2_1_2', 2.7282999999989066e-05, 2.7282999999989066e-05],
+						['DemoFunc_2_0_0', 'DemoFunc_0_2', 9.522600000000381e-05, 9.522600000000381e-05],
+						['<inside DemoFunc_2_0_0>', 'DemoFunc_2_0_0', 2.691700000001518e-05, 2.691700000001518e-05],
+						['DemoFunc_0_0_0', 'DemoFunc_0_0', 0.00024257100000002474, 0.00024257100000002474],
+						['<inside DemoFunc_0_0_0>', 'DemoFunc_0_0_0', 2.632800000001989e-05, 2.632800000001989e-05],
+						['DemoFunc_2_2_1', 'DemoFunc_2_1_0', 2.63179999999974e-05, 2.63179999999974e-05],
+						['<inside DemoFunc_2_2_1>', 'DemoFunc_2_2_1', 2.63179999999974e-05, 2.63179999999974e-05],
+						['DemoFunc_0_2', '<Worker_Thread_2_root>',0.0004959880000000028, 0.0004959880000000028],
+						['<inside DemoFunc_0_2>', 'DemoFunc_0_2', 2.6245000000008067e-05, 2.6245000000008067e-05],
+						['DemoFunc_2_1_2\x0b', 'DemoFunc_2_0_2', 2.593700000000365e-05, 2.593700000000365e-05],
+						['<inside DemoFunc_2_1_2>\x0b', 'DemoFunc_2_1_2\x0b', 2.593700000000365e-05, 2.593700000000365e-05],
+						['DemoFunc_0_1_0\x0b\x0b', 'DemoFunc_0_0_1', 2.5353000000005732e-05, 2.5353000000005732e-05],
+						['<inside DemoFunc_0_1_0>\x0b\x0b', 'DemoFunc_0_1_0\x0b\x0b', 2.5353000000005732e-05, 2.5353000000005732e-05],
+						['DemoFunc_0_2_1\x0b\x0b\x0b', 'DemoFunc_0_1_0\x0b', 2.4620000000002973e-05, 2.4620000000002973e-05],
+						['<inside DemoFunc_0_2_1>\x0b\x0b\x0b', 'DemoFunc_0_2_1\x0b\x0b\x0b', 2.4620000000002973e-05, 2.4620000000002973e-05],
+						['DemoFunc_2_2_0\x0b', 'DemoFunc_2_1_0', 2.391700000001218e-05, 2.391700000001218e-05],
+						['<inside DemoFunc_2_2_0>\x0b', 'DemoFunc_2_2_0\x0b', 2.391700000001218e-05, 2.391700000001218e-05],
+						['DemoFunc_0_2_0\x0b\x0b\x0b\x0b\x0b', 'DemoFunc_0_1_2\x0b', 2.3335999999984924e-05, 2.3335999999984924e-05],
+						['<inside DemoFunc_0_2_0>\x0b\x0b\x0b\x0b\x0b', 'DemoFunc_0_2_0\x0b\x0b\x0b\x0b\x0b', 2.3335999999984924e-05, 2.3335999999984924e-05],
+						['DemoFunc_2_1_0\x0b\x0b', 'DemoFunc_2_0_2', 2.2991999999999457e-05, 2.2991999999999457e-05],
+						['<inside DemoFunc_2_1_0>\x0b\x0b', 'DemoFunc_2_1_0\x0b\x0b', 2.2991999999999457e-05, 2.2991999999999457e-05],
+						['DemoFunc_0_1_2\x0b', 'DemoFunc_0_0_2', 4.460400000000364e-05, 4.460400000000364e-05],
+						['<inside DemoFunc_0_1_2>\x0b', 'DemoFunc_0_1_2\x0b', 2.1268000000018716e-05, 2.1268000000018716e-05],
+						['DemoFunc_2_1_0', 'DemoFunc_2_0_1', 0.00010190999999998285, 0.00010190999999998285],
+						['<inside DemoFunc_2_1_0>', 'DemoFunc_2_1_0', 2.0789999999965003e-05, 2.0789999999965003e-05],
+						['<unknown>', '<Worker_Thread_2_root>',0.0, 0.0],
+						['<inside <unknown>>', '<unknown>', 1e-10, 1e-10],
+					]);
+					var tree = new google.visualization.TreeMap(document.getElementById("chart_div_Worker_Thread_2"));
+					function showFullTooltip(row, size, value) {
+						return '<div style="background:#fd9; padding:10px; border-style:solid">' +
+						'<span style="font-family:Courier"><b>' +
+						data.getValue(row, 0).split("").join("").split("<").join("&lt;").split(">").join("&gt;")
+						+ ':</b>' + _formatTime(data.getValue(row, 2)) + ' ms</span></div>'
+					}
+					var options = {
+						highlightOnMouseOver: true,
+						maxDepth: 1,
+						maxPostDepth: 20,
+						minHighlightColor: "#80a0ff",
+						midHighlightColor: "#ffffff",
+						maxHighlightColor: "#ff0000",
+						minColor: "#7390E6",
+						midColor: "#E6E6E6",
+						maxColor: "#e60000",
+						headerHeight: 15,
+						showScale: false,
+						height: 500,
+						useWeightedAverageForAggregation: true,
+						generateTooltip: showFullTooltip
+					};
+					tree.draw(data, options);
+				}
+			</script>
+			<script type="text/javascript">
+				var datas_Worker_Thread_2 = [
+					[ "DemoFunc_0_1", 3.412099999999807e-05, 3.412099999999807e-05, 1, 3.412099999999807e-05, 3.412099999999807e-05, 3.412099999999807e-05, 3.412099999999807e-05, 3.412099999999807e-05, 3.412099999999807e-05,
+						[]
+					],
+					[ "DemoFunc_0_0", 0.0005583180000000021, 3.187999999998414e-05, 1, 0.0005583180000000021, 0.0005583180000000021, 0.0005583180000000021, 3.187999999998414e-05, 3.187999999998414e-05, 3.187999999998414e-05,
+						[
+							[ "DemoFunc_0_0_2", 0.0002284999999999926, 3.222299999999789e-05, 1, 0.0002284999999999926, 0.0002284999999999926, 0.0002284999999999926, 3.222299999999789e-05, 3.222299999999789e-05, 3.222299999999789e-05,
+								[
+									[ "DemoFunc_0_1_0", 8.677299999998445e-05, 3.230799999998091e-05, 1, 8.677299999998445e-05, 8.677299999998445e-05, 8.677299999998445e-05, 3.230799999998091e-05, 3.230799999998091e-05, 3.230799999998091e-05,
+										[
+											[ "DemoFunc_0_2_0", 2.9845000000000566e-05, 2.9845000000000566e-05, 1, 2.9845000000000566e-05, 2.9845000000000566e-05, 2.9845000000000566e-05, 2.9845000000000566e-05, 2.9845000000000566e-05, 2.9845000000000566e-05,
+												[]
+											],
+
+											[ "DemoFunc_0_2_1", 2.4620000000002973e-05, 2.4620000000002973e-05, 1, 2.4620000000002973e-05, 2.4620000000002973e-05, 2.4620000000002973e-05, 2.4620000000002973e-05, 2.4620000000002973e-05, 2.4620000000002973e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_0_1_1", 6.490000000000662e-05, 3.2113999999999754e-05, 1, 6.490000000000662e-05, 6.490000000000662e-05, 6.490000000000662e-05, 3.2113999999999754e-05, 3.2113999999999754e-05, 3.2113999999999754e-05,
+										[
+											[ "DemoFunc_0_2_0", 3.2786000000006865e-05, 3.2786000000006865e-05, 1, 3.2786000000006865e-05, 3.2786000000006865e-05, 3.2786000000006865e-05, 3.2786000000006865e-05, 3.2786000000006865e-05, 3.2786000000006865e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_0_1_2", 4.460400000000364e-05, 2.1268000000018716e-05, 1, 4.460400000000364e-05, 4.460400000000364e-05, 4.460400000000364e-05, 2.1268000000018716e-05, 2.1268000000018716e-05, 2.1268000000018716e-05,
+										[
+											[ "DemoFunc_0_2_0", 2.3335999999984924e-05, 2.3335999999984924e-05, 1, 2.3335999999984924e-05, 2.3335999999984924e-05, 2.3335999999984924e-05, 2.3335999999984924e-05, 2.3335999999984924e-05, 2.3335999999984924e-05,
+												[]
+											]
+										]
+									]
+								]
+							],
+
+							[ "DemoFunc_0_0_1", 5.536700000000061e-05, 3.0013999999994878e-05, 1, 5.536700000000061e-05, 5.536700000000061e-05, 5.536700000000061e-05, 3.0013999999994878e-05, 3.0013999999994878e-05, 3.0013999999994878e-05,
+								[
+									[ "DemoFunc_0_1_0", 2.5353000000005732e-05, 2.5353000000005732e-05, 1, 2.5353000000005732e-05, 2.5353000000005732e-05, 2.5353000000005732e-05, 2.5353000000005732e-05, 2.5353000000005732e-05, 2.5353000000005732e-05,
+										[]
+									]
+								]
+							],
+
+							[ "DemoFunc_0_0_0", 0.00024257100000002474, 2.632800000001989e-05, 1, 0.00024257100000002474, 0.00024257100000002474, 0.00024257100000002474, 2.632800000001989e-05, 2.632800000001989e-05, 2.632800000001989e-05,
+								[
+									[ "DemoFunc_0_1_1", 3.2376000000000626e-05, 3.2376000000000626e-05, 1, 3.2376000000000626e-05, 3.2376000000000626e-05, 3.2376000000000626e-05, 3.2376000000000626e-05, 3.2376000000000626e-05, 3.2376000000000626e-05,
+										[]
+									],
+
+									[ "DemoFunc_0_1_2", 0.00012286999999999715, 3.110400000000402e-05, 1, 0.00012286999999999715, 0.00012286999999999715, 0.00012286999999999715, 3.110400000000402e-05, 3.110400000000402e-05, 3.110400000000402e-05,
+										[
+											[ "DemoFunc_0_2_2", 3.4986000000014617e-05, 3.4986000000014617e-05, 1, 3.4986000000014617e-05, 3.4986000000014617e-05, 3.4986000000014617e-05, 3.4986000000014617e-05, 3.4986000000014617e-05, 3.4986000000014617e-05,
+												[]
+											],
+
+											[ "DemoFunc_0_2_0", 2.913799999998412e-05, 2.913799999998412e-05, 1, 2.913799999998412e-05, 2.913799999998412e-05, 2.913799999998412e-05, 2.913799999998412e-05, 2.913799999998412e-05, 2.913799999998412e-05,
+												[]
+											],
+
+											[ "DemoFunc_0_2_1", 2.7641999999994393e-05, 2.7641999999994393e-05, 1, 2.7641999999994393e-05, 2.7641999999994393e-05, 2.7641999999994393e-05, 2.7641999999994393e-05, 2.7641999999994393e-05, 2.7641999999994393e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_0_1_0", 6.099700000000707e-05, 2.743700000001903e-05, 1, 6.099700000000707e-05, 6.099700000000707e-05, 6.099700000000707e-05, 2.743700000001903e-05, 2.743700000001903e-05, 2.743700000001903e-05,
+										[
+											[ "DemoFunc_0_2_0", 3.3559999999988044e-05, 3.3559999999988044e-05, 1, 3.3559999999988044e-05, 3.3559999999988044e-05, 3.3559999999988044e-05, 3.3559999999988044e-05, 3.3559999999988044e-05, 3.3559999999988044e-05,
+												[]
+											]
+										]
+									]
+								]
+							]
+						]
+					],
+					[ "DemoFunc_0_2", 0.0004959880000000028, 2.6245000000008067e-05, 1, 0.0004959880000000028, 0.0004959880000000028, 0.0004959880000000028, 2.6245000000008067e-05, 2.6245000000008067e-05, 2.6245000000008067e-05,
+						[
+							[ "DemoFunc_2_0_1", 0.00019664999999999266, 3.742800000000601e-05, 1, 0.00019664999999999266, 0.00019664999999999266, 0.00019664999999999266, 3.742800000000601e-05, 3.742800000000601e-05, 3.742800000000601e-05,
+								[
+									[ "DemoFunc_2_1_1", 3.002900000001474e-05, 3.002900000001474e-05, 1, 3.002900000001474e-05, 3.002900000001474e-05, 3.002900000001474e-05, 3.002900000001474e-05, 3.002900000001474e-05, 3.002900000001474e-05,
+										[]
+									],
+
+									[ "DemoFunc_2_1_2", 2.7282999999989066e-05, 2.7282999999989066e-05, 1, 2.7282999999989066e-05, 2.7282999999989066e-05, 2.7282999999989066e-05, 2.7282999999989066e-05, 2.7282999999989066e-05, 2.7282999999989066e-05,
+										[]
+									],
+
+									[ "DemoFunc_2_1_0", 0.00010190999999998285, 2.0789999999965003e-05, 1, 0.00010190999999998285, 0.00010190999999998285, 0.00010190999999998285, 2.0789999999965003e-05, 2.0789999999965003e-05, 2.0789999999965003e-05,
+										[
+											[ "DemoFunc_2_2_2", 3.088500000000827e-05, 3.088500000000827e-05, 1, 3.088500000000827e-05, 3.088500000000827e-05, 3.088500000000827e-05, 3.088500000000827e-05, 3.088500000000827e-05, 3.088500000000827e-05,
+												[]
+											],
+
+											[ "DemoFunc_2_2_1", 2.63179999999974e-05, 2.63179999999974e-05, 1, 2.63179999999974e-05, 2.63179999999974e-05, 2.63179999999974e-05, 2.63179999999974e-05, 2.63179999999974e-05, 2.63179999999974e-05,
+												[]
+											],
+
+											[ "DemoFunc_2_2_0", 2.391700000001218e-05, 2.391700000001218e-05, 1, 2.391700000001218e-05, 2.391700000001218e-05, 2.391700000001218e-05, 2.391700000001218e-05, 2.391700000001218e-05, 2.391700000001218e-05,
+												[]
+											]
+										]
+									]
+								]
+							],
+
+							[ "DemoFunc_2_0_2", 0.00017786699999999822, 3.389700000000495e-05, 1, 0.00017786699999999822, 0.00017786699999999822, 0.00017786699999999822, 3.389700000000495e-05, 3.389700000000495e-05, 3.389700000000495e-05,
+								[
+									[ "DemoFunc_2_1_1", 9.504099999999016e-05, 3.186299999999309e-05, 1, 9.504099999999016e-05, 9.504099999999016e-05, 9.504099999999016e-05, 3.186299999999309e-05, 3.186299999999309e-05, 3.186299999999309e-05,
+										[
+											[ "DemoFunc_2_2_0", 3.2666999999986235e-05, 3.2666999999986235e-05, 1, 3.2666999999986235e-05, 3.2666999999986235e-05, 3.2666999999986235e-05, 3.2666999999986235e-05, 3.2666999999986235e-05, 3.2666999999986235e-05,
+												[]
+											],
+
+											[ "DemoFunc_2_2_1", 3.0511000000010835e-05, 3.0511000000010835e-05, 1, 3.0511000000010835e-05, 3.0511000000010835e-05, 3.0511000000010835e-05, 3.0511000000010835e-05, 3.0511000000010835e-05, 3.0511000000010835e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_2_1_2", 2.593700000000365e-05, 2.593700000000365e-05, 1, 2.593700000000365e-05, 2.593700000000365e-05, 2.593700000000365e-05, 2.593700000000365e-05, 2.593700000000365e-05, 2.593700000000365e-05,
+										[]
+									],
+
+									[ "DemoFunc_2_1_0", 2.2991999999999457e-05, 2.2991999999999457e-05, 1, 2.2991999999999457e-05, 2.2991999999999457e-05, 2.2991999999999457e-05, 2.2991999999999457e-05, 2.2991999999999457e-05, 2.2991999999999457e-05,
+										[]
+									]
+								]
+							],
+
+							[ "DemoFunc_2_0_0", 9.522600000000381e-05, 2.691700000001518e-05, 1, 9.522600000000381e-05, 9.522600000000381e-05, 9.522600000000381e-05, 2.691700000001518e-05, 2.691700000001518e-05, 2.691700000001518e-05,
+								[
+									[ "DemoFunc_2_1_1", 3.6972999999995704e-05, 3.6972999999995704e-05, 1, 3.6972999999995704e-05, 3.6972999999995704e-05, 3.6972999999995704e-05, 3.6972999999995704e-05, 3.6972999999995704e-05, 3.6972999999995704e-05,
+										[]
+									],
+
+									[ "DemoFunc_2_1_0", 3.1335999999992925e-05, 3.1335999999992925e-05, 1, 3.1335999999992925e-05, 3.1335999999992925e-05, 3.1335999999992925e-05, 3.1335999999992925e-05, 3.1335999999992925e-05, 3.1335999999992925e-05,
+										[]
+									]
+								]
+							]
+						]
+					],
+					[ "<unknown>", 0.0, 0.0, 2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+						[]
+					]
+				]
+				var totals_Worker_Thread_2 = [0.0020061870000000204, 72, 0.0005583180000000021, 0.0005583180000000021, 0.0005583180000000021, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05]
+				function HideChildren_Worker_Thread_2(parentId) {
+						className = 'Worker_Thread_2_Parent_' + parentId
+						elems = document.getElementsByClassName(className)
+						arrowElem = document.getElementById("arrow_Worker_Thread_2_"+parentId)
+						for(var i = 0; i < elems.length; ++i) {
+							var elem = elems[i]
+							if(elem.style.maxHeight == '0px') {
+								elem.style.maxHeight=elem.rememberMaxHeight
+								arrowElem.innerHTML = '&#x25bc;'
+							}
+							else
+							{
+								elem.style.maxHeight='0px'
+								arrowElem.innerHTML = '&#x25b6;'
+							}
+						}
+					}
+
+					var mode_Worker_Thread_2 = "tree"
+
+					function Flatten_Worker_Thread_2() {
+						ret = {}
+						function recurse(datas) {
+							if(datas.length == 0) {
+								return;
+							}
+							for(var i = 0; i < datas.length; ++i) {
+								if(datas[i][0] in ret) {
+									item = ret[datas[i][0]]
+									item[0] += datas[i][1]
+									item[1] += datas[i][2]
+									item[2] += datas[i][3]
+									item[3] += datas[i][4]
+									item[4] += datas[i][5]
+									item[5] += datas[i][6]
+									item[6] += datas[i][7]
+									item[7] += datas[i][8]
+									item[8] += datas[i][9]
+								}
+								else {
+									ret[datas[i][0]] = [
+										datas[i][1],
+										datas[i][2],
+										datas[i][3],
+										datas[i][4],
+										datas[i][5],
+										datas[i][6],
+										datas[i][7],
+										datas[i][8],
+										datas[i][9]
+									];
+								}
+								recurse(datas[i][10]);
+							}
+						}
+						recurse(datas_Worker_Thread_2);
+						retArray = []
+						for(var key in ret) {
+							item = ret[key]
+							retArray.push([
+								key,
+								item[0],
+								item[1],
+								item[2],
+								item[3],
+								item[4],
+								item[5],
+								item[6],
+								item[7],
+								item[8],
+								[]
+							]);
+						}
+						return retArray;
+					}
+					
+					function escapeHtml(unsafe) {
+						return unsafe
+							 .replace(/&/g, "&amp;")
+							 .replace(/</g, "&lt;")
+							 .replace(/>/g, "&gt;")
+							 .replace(/"/g, "&quot;")
+							 .replace(/'/g, "&#039;");
+					}
+
+					var prevSortKey_Worker_Thread_2 = 1
+					var prevSortType_Worker_Thread_2 = -1
+					var maxId_Worker_Thread_2 = -1
+					function Populate_Worker_Thread_2(sortKey) {
+						var sortType = 1
+						if(sortKey == 0) {
+							sortType = -1
+						}
+						if(prevSortKey_Worker_Thread_2 == sortKey && prevSortType_Worker_Thread_2 == sortType) {
+							sortType *= -1
+						}
+						prevSortKey_Worker_Thread_2 = sortKey
+						prevSortType_Worker_Thread_2 = sortType
+
+						elem = document.getElementById("stack_Worker_Thread_2")
+						bg1 = "#DFDFF2"
+						bg2 = "#D3D3E6"
+						var s = '<div style="border:1px solid black"><div style="font-weight:bold;border-bottom:1px solid black;" class="gradient">'
+						s += '<span class="hoversort" style="width:37%;display:inline-block;text-align:center;" onclick="Populate_Worker_Thread_2(0)">Block</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_2(1)">Inclusive</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_2(2)">Exclusive</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_2(3)">Count</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_2(4)">Inclusive Max</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_2(5)">Inclusive Min</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_2(6)">Inclusive Mean</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_2(7)">Exclusive Max</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_2(8)">Exclusive Min</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_Worker_Thread_2(9)">Exclusive Mean</span>'
+						s += '</div>'
+						var id = 1
+						function recurse(oneLevel, depth, parentId) {
+							oneLevel = oneLevel.sort(function(a, b) {
+								var x = a[sortKey]; var y = b[sortKey];
+								return ((x < y) ? 1 : ((x > y) ? -1 : 0)) * sortType;
+							});
+							for(var i=0; i < oneLevel.length; ++i) {
+								var thisId = id;
+								id += 1;
+								if(thisId %2 == 0) {
+									bg1 = "#C8C6F2"
+									bg2 = "#B3B1D9"
+								}
+								else {
+									bg1 = "#BDBBE6"
+									bg2 = "#A8A7CC"
+								}
+								s += '<div style="width:100%;overflow:hidden;transition:max-height 0.5s linear" class="Worker_Thread_2_Parent_'+parentId+'", id="Worker_Thread_2_'+thisId+'">'
+								s += '<div style="line-height:22px;"><span style="height:100%;width:37%;display:inline-block;background-color:'+bg1+'" '
+								if(oneLevel[i][10].length != 0) {
+									s += 'class="hoversort" onclick="HideChildren_Worker_Thread_2(\''+thisId+'\')"'
+								}
+								s += '><span style="width:20px;display:inline-block;margin-left:' + (depth * 15) + 'px;" id="arrow_Worker_Thread_2_'+thisId+'">'
+								if(oneLevel[i][10].length != 0) {
+									s += '&#x25bc;'
+								}
+								s += '</span>' + escapeHtml(oneLevel[i][0]) + '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][1], totals_Worker_Thread_2[0])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][1]/totals_Worker_Thread_2[0] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][2], totals_Worker_Thread_2[0])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][2]/totals_Worker_Thread_2[0] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + oneLevel[i][3] + ' (' + Math.min(100,oneLevel[i][3]/totals_Worker_Thread_2[1] * 100).toFixed(2) + '%)'
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][3]/totals_Worker_Thread_2[1] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][4], totals_Worker_Thread_2[2])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][4]/totals_Worker_Thread_2[2] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][5], totals_Worker_Thread_2[3])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][5]/totals_Worker_Thread_2[3] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][6], totals_Worker_Thread_2[4])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][6]/totals_Worker_Thread_2[4] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][7], totals_Worker_Thread_2[5])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][7]/totals_Worker_Thread_2[5] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][8], totals_Worker_Thread_2[6])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][8]/totals_Worker_Thread_2[6] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][9], totals_Worker_Thread_2[7])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][9]/totals_Worker_Thread_2[7] * 100) + '%;"></div>'
+								s += '</span></div>'
+								recurse(oneLevel[i][10], depth + 1, thisId)
+								s += "</div>"
+							}
+						}
+						var datas;
+						if(mode_Worker_Thread_2 == "flat") {
+							datas = Flatten_Worker_Thread_2();
+						}
+						else {
+							datas = datas_Worker_Thread_2;
+						}
+						recurse(datas, 0, 0)
+						s += '</div>'
+						s += ''
+						elem.innerHTML = s
+						for(var i = 0; i < id; ++i) {
+							className = 'Worker_Thread_2_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight = Math.max(22, elem.clientHeight) + "px"
+								elem.rememberMaxHeight = elem.style.maxHeight
+							}
+						}
+						maxId_Worker_Thread_2 = id
+					}
+
+					function ExpandAll_Worker_Thread_2() {
+						for(var i = 1; i < maxId_Worker_Thread_2; ++i) {
+							className = 'Worker_Thread_2_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							arrowElem = document.getElementById("arrow_Worker_Thread_2_"+i)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight=elem.rememberMaxHeight
+								arrowElem.innerHTML = '&#x25bc;'
+							}
+						}
+						return false;
+					}
+
+					function CollapseAll_Worker_Thread_2() {
+						for(var i = 1; i < maxId_Worker_Thread_2; ++i) {
+							className = 'Worker_Thread_2_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							arrowElem = document.getElementById("arrow_Worker_Thread_2_"+i)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight='0px'
+								arrowElem.innerHTML = '&#x25b6;'
+							}
+						}
+						return false;
+					}
+
+					function RenderTreeView_Worker_Thread_2() {
+						if(mode_Worker_Thread_2 != "tree") {
+							mode_Worker_Thread_2 = "tree";
+							prevSortType_Worker_Thread_2 *= -1
+							Populate_Worker_Thread_2(prevSortKey_Worker_Thread_2)
+							elem = document.getElementById("expandcollapse_Worker_Thread_2")
+							elem.style.opacity = 100
+							elem.style.visibility = "visible"
+						}
+						return false;
+					}
+
+					function RenderFlatView_Worker_Thread_2() {
+						if(mode_Worker_Thread_2 != "flat") {
+							mode_Worker_Thread_2 = "flat";
+							prevSortType_Worker_Thread_2 *= -1
+							Populate_Worker_Thread_2(prevSortKey_Worker_Thread_2)
+							elem = document.getElementById("expandcollapse_Worker_Thread_2")
+							elem.style.opacity = 0
+							elem.style.visibility = "hidden"
+						}
+						return false;
+					}
+			</script>
+			<div>
+			<div style="border:1px solid black;padding:0px 6px">
+				<div style="float:left;transition:opacity 0.5s, visibility 0.5s" id="expandcollapse_Worker_Thread_2">
+					<a href="javascript:;" onclick="ExpandAll_Worker_Thread_2()">expand all</a> |
+					<a href="javascript:;" onclick="CollapseAll_Worker_Thread_2()">collapse all</a>
+				</div>
+				&nbsp;
+				<div style="float:right">
+					View as:
+					<a href="javascript:;" onclick="RenderTreeView_Worker_Thread_2()">tree</a> |
+					<a href="javascript:;" onclick="RenderFlatView_Worker_Thread_2()">flat</a>
+				</div>
+			</div>
+			<div style="clear:left" id="stack_Worker_Thread_2"></div>
+			</div>
+			<script type="text/javascript">
+				Populate_Worker_Thread_2(1);
+			</script>
+		</div>
+		<div style="margin:2px 10px;padding: 5px 10px;background-color:lavender;border: 1px solid grey;">
+			<h3>CUMULATIVE</h3>
+
+			<div id="chart_div_CUMULATIVE"></div>
+			<script type="text/javascript">
+				google.charts.load("current", {"packages":["treemap"]});
+				google.charts.setOnLoadCallback(drawChart);
+				function drawChart() {
+					var data = new google.visualization.DataTable();
+					data.addColumn("string", "ID");
+					data.addColumn("string", "Parent");
+					data.addColumn("number", "Exclusive time in milliseconds");
+					data.addColumn("number", "Inclusive time in milliseconds");
+					data.addRows([
+						['<CUMULATIVE_root>', null, 0, 0 ],
+						['DemoFunc_0_0', '<CUMULATIVE_root>',0.0008477929999999856, 0.0008477929999999856],
+						['<inside DemoFunc_0_0>', 'DemoFunc_0_0', 0.00010001099999995544, 0.00010001099999995544],
+						['DemoFunc_0_1', '<CUMULATIVE_root>',0.00025605600000003226, 0.00025605600000003226],
+						['<inside DemoFunc_0_1>', 'DemoFunc_0_1', 9.493100000004806e-05, 9.493100000004806e-05],
+						['DemoFunc_2_0_0', 'DemoFunc_0_2', 0.00016046999999996814, 0.00016046999999996814],
+						['<inside DemoFunc_2_0_0>', 'DemoFunc_2_0_0', 9.216099999997951e-05, 9.216099999997951e-05],
+						['DemoFunc_0_2', '<CUMULATIVE_root>',0.0009023380000000025, 0.0009023380000000025],
+						['<inside DemoFunc_0_2>', 'DemoFunc_0_2', 8.873700000003315e-05, 8.873700000003315e-05],
+						['DemoFunc_2_0_1', 'DemoFunc_0_2', 0.000475264000000003, 0.000475264000000003],
+						['<inside DemoFunc_2_0_1>', 'DemoFunc_2_0_1', 7.484400000001834e-05, 7.484400000001834e-05],
+						['DemoFunc_0_2_0\x0b', 'DemoFunc_0_1_0', 6.761999999999047e-05, 6.761999999999047e-05],
+						['<inside DemoFunc_0_2_0>\x0b', 'DemoFunc_0_2_0\x0b', 6.761999999999047e-05, 6.761999999999047e-05],
+						['DemoFunc_1_0_0', 'DemoFunc_0_1', 0.0001611249999999842, 0.0001611249999999842],
+						['<inside DemoFunc_1_0_0>', 'DemoFunc_1_0_0', 6.686499999997153e-05, 6.686499999997153e-05],
+						['DemoFunc_0_1_0', 'DemoFunc_0_0_0', 0.00016379100000002422, 0.00016379100000002422],
+						['<inside DemoFunc_0_1_0>', 'DemoFunc_0_1_0', 6.370700000002394e-05, 6.370700000002394e-05],
+						['DemoFunc_2_2_1', 'DemoFunc_2_1_0', 6.319099999999023e-05, 6.319099999999023e-05],
+						['<inside DemoFunc_2_2_1>', 'DemoFunc_2_2_1', 6.319099999999023e-05, 6.319099999999023e-05],
+						['DemoFunc_2_1_1', 'DemoFunc_2_0_1', 0.00011433900000001884, 0.00011433900000001884],
+						['<inside DemoFunc_2_1_1>', 'DemoFunc_2_1_1', 6.108600000001574e-05, 6.108600000001574e-05],
+						['DemoFunc_0_1_1', 'DemoFunc_0_0_0', 0.00011967999999998313, 0.00011967999999998313],
+						['<inside DemoFunc_0_1_1>', 'DemoFunc_0_1_1', 5.982899999998348e-05, 5.982899999998348e-05],
+						['DemoFunc_0_0_0', 'DemoFunc_0_0', 0.00046391500000003694, 0.00046391500000003694],
+						['<inside DemoFunc_0_0_0>', 'DemoFunc_0_0_0', 5.757400000003243e-05, 5.757400000003243e-05],
+						['DemoFunc_2_1_0', 'DemoFunc_2_0_1', 0.00020167799999998293, 0.00020167799999998293],
+						['<inside DemoFunc_2_1_0>', 'DemoFunc_2_1_0', 5.4422999999970134e-05, 5.4422999999970134e-05],
+						['DemoFunc_2_2_0\x0b', 'DemoFunc_2_1_0', 5.31790000000143e-05, 5.31790000000143e-05],
+						['<inside DemoFunc_2_2_0>\x0b', 'DemoFunc_2_2_0\x0b', 5.31790000000143e-05, 5.31790000000143e-05],
+						['DemoFunc_2_1_2', 'DemoFunc_2_0_1', 8.440299999998291e-05, 8.440299999998291e-05],
+						['<inside DemoFunc_2_1_2>', 'DemoFunc_2_1_2', 5.3121999999961034e-05, 5.3121999999961034e-05],
+						['DemoFunc_1_2_0', 'DemoFunc_1_1_0', 3.915199999998675e-05, 3.915199999998675e-05],
+						['<inside DemoFunc_1_2_0>', 'DemoFunc_1_2_0', 3.915199999998675e-05, 3.915199999998675e-05],
+						['DemoFunc_2_1_1\x0b', 'DemoFunc_2_0_0', 3.6972999999995704e-05, 3.6972999999995704e-05],
+						['<inside DemoFunc_2_1_1>\x0b', 'DemoFunc_2_1_1\x0b', 3.6972999999995704e-05, 3.6972999999995704e-05],
+						['DemoFunc_0_2_2', 'DemoFunc_0_1_2', 3.4986000000014617e-05, 3.4986000000014617e-05],
+						['<inside DemoFunc_0_2_2>', 'DemoFunc_0_2_2', 3.4986000000014617e-05, 3.4986000000014617e-05],
+						['DemoFunc_0_2_0', 'DemoFunc_0_1_1', 3.4957000000002125e-05, 3.4957000000002125e-05],
+						['<inside DemoFunc_0_2_0>', 'DemoFunc_0_2_0', 3.4957000000002125e-05, 3.4957000000002125e-05],
+						['DemoFunc_2_0_2', 'DemoFunc_0_2', 0.00017786699999999822, 0.00017786699999999822],
+						['<inside DemoFunc_2_0_2>', 'DemoFunc_2_0_2', 3.389700000000495e-05, 3.389700000000495e-05],
+						['DemoFunc_1_2_1', 'DemoFunc_1_1_0', 3.321600000000258e-05, 3.321600000000258e-05],
+						['<inside DemoFunc_1_2_1>', 'DemoFunc_1_2_1', 3.321600000000258e-05, 3.321600000000258e-05],
+						['DemoFunc_0_2_0\x0b\x0b', 'DemoFunc_0_1_1\x0b', 3.2786000000006865e-05, 3.2786000000006865e-05],
+						['<inside DemoFunc_0_2_0>\x0b\x0b', 'DemoFunc_0_2_0\x0b\x0b', 3.2786000000006865e-05, 3.2786000000006865e-05],
+						['DemoFunc_2_2_0\x0b\x0b\x0b', 'DemoFunc_2_1_1\x0b\x0b', 3.2666999999986235e-05, 3.2666999999986235e-05],
+						['<inside DemoFunc_2_2_0>\x0b\x0b\x0b', 'DemoFunc_2_2_0\x0b\x0b\x0b', 3.2666999999986235e-05, 3.2666999999986235e-05],
+						['DemoFunc_0_2_1', 'DemoFunc_0_1_0', 3.246400000000982e-05, 3.246400000000982e-05],
+						['<inside DemoFunc_0_2_1>', 'DemoFunc_0_2_1', 3.246400000000982e-05, 3.246400000000982e-05],
+						['DemoFunc_0_1_0\x0b', 'DemoFunc_0_0_2', 8.677299999998445e-05, 8.677299999998445e-05],
+						['<inside DemoFunc_0_1_0>\x0b', 'DemoFunc_0_1_0\x0b', 3.230799999998091e-05, 3.230799999998091e-05],
+						['DemoFunc_0_0_2', 'DemoFunc_0_0', 0.0002284999999999926, 0.0002284999999999926],
+						['<inside DemoFunc_0_0_2>', 'DemoFunc_0_0_2', 3.222299999999789e-05, 3.222299999999789e-05],
+						['DemoFunc_0_1_1\x0b', 'DemoFunc_0_0_2', 6.490000000000662e-05, 6.490000000000662e-05],
+						['<inside DemoFunc_0_1_1>\x0b', 'DemoFunc_0_1_1\x0b', 3.2113999999999754e-05, 3.2113999999999754e-05],
+						['DemoFunc_2_1_1\x0b\x0b', 'DemoFunc_2_0_2', 9.504099999999016e-05, 9.504099999999016e-05],
+						['<inside DemoFunc_2_1_1>\x0b\x0b', 'DemoFunc_2_1_1\x0b\x0b', 3.186299999999309e-05, 3.186299999999309e-05],
+						['DemoFunc_2_1_0\x0b', 'DemoFunc_2_0_0', 3.1335999999992925e-05, 3.1335999999992925e-05],
+						['<inside DemoFunc_2_1_0>\x0b', 'DemoFunc_2_1_0\x0b', 3.1335999999992925e-05, 3.1335999999992925e-05],
+						['DemoFunc_2_2_0', 'DemoFunc_2_1_2', 3.1281000000021875e-05, 3.1281000000021875e-05],
+						['<inside DemoFunc_2_2_0>', 'DemoFunc_2_2_0', 3.1281000000021875e-05, 3.1281000000021875e-05],
+						['DemoFunc_0_1_2', 'DemoFunc_0_0_0', 0.00012286999999999715, 0.00012286999999999715],
+						['<inside DemoFunc_0_1_2>', 'DemoFunc_0_1_2', 3.110400000000402e-05, 3.110400000000402e-05],
+						['DemoFunc_2_2_2', 'DemoFunc_2_1_0', 3.088500000000827e-05, 3.088500000000827e-05],
+						['<inside DemoFunc_2_2_2>', 'DemoFunc_2_2_2', 3.088500000000827e-05, 3.088500000000827e-05],
+						['DemoFunc_2_2_1\x0b\x0b', 'DemoFunc_2_1_1\x0b\x0b', 3.0511000000010835e-05, 3.0511000000010835e-05],
+						['<inside DemoFunc_2_2_1>\x0b\x0b', 'DemoFunc_2_2_1\x0b\x0b', 3.0511000000010835e-05, 3.0511000000010835e-05],
+						['DemoFunc_0_0_1', 'DemoFunc_0_0', 5.536700000000061e-05, 5.536700000000061e-05],
+						['<inside DemoFunc_0_0_1>', 'DemoFunc_0_0_1', 3.0013999999994878e-05, 3.0013999999994878e-05],
+						['DemoFunc_0_2_0\x0b\x0b\x0b', 'DemoFunc_0_1_0\x0b', 2.9845000000000566e-05, 2.9845000000000566e-05],
+						['<inside DemoFunc_0_2_0>\x0b\x0b\x0b', 'DemoFunc_0_2_0\x0b\x0b\x0b', 2.9845000000000566e-05, 2.9845000000000566e-05],
+						['DemoFunc_0_2_0\x0b\x0b\x0b\x0b', 'DemoFunc_0_1_2', 2.913799999998412e-05, 2.913799999998412e-05],
+						['<inside DemoFunc_0_2_0>\x0b\x0b\x0b\x0b', 'DemoFunc_0_2_0\x0b\x0b\x0b\x0b', 2.913799999998412e-05, 2.913799999998412e-05],
+						['DemoFunc_2_2_0\x0b\x0b', 'DemoFunc_2_1_1', 2.9063999999995316e-05, 2.9063999999995316e-05],
+						['<inside DemoFunc_2_2_0>\x0b\x0b', 'DemoFunc_2_2_0\x0b\x0b', 2.9063999999995316e-05, 2.9063999999995316e-05],
+						['DemoFunc_0_2_1\x0b\x0b', 'DemoFunc_0_1_2', 2.7641999999994393e-05, 2.7641999999994393e-05],
+						['<inside DemoFunc_0_2_1>\x0b\x0b', 'DemoFunc_0_2_1\x0b\x0b', 2.7641999999994393e-05, 2.7641999999994393e-05],
+						['DemoFunc_2_1_2\x0b', 'DemoFunc_2_0_2', 2.593700000000365e-05, 2.593700000000365e-05],
+						['<inside DemoFunc_2_1_2>\x0b', 'DemoFunc_2_1_2\x0b', 2.593700000000365e-05, 2.593700000000365e-05],
+						['DemoFunc_0_1_0\x0b\x0b', 'DemoFunc_0_0_1', 2.5353000000005732e-05, 2.5353000000005732e-05],
+						['<inside DemoFunc_0_1_0>\x0b\x0b', 'DemoFunc_0_1_0\x0b\x0b', 2.5353000000005732e-05, 2.5353000000005732e-05],
+						['DemoFunc_0_2_1\x0b', 'DemoFunc_0_1_1', 2.489399999999753e-05, 2.489399999999753e-05],
+						['<inside DemoFunc_0_2_1>\x0b', 'DemoFunc_0_2_1\x0b', 2.489399999999753e-05, 2.489399999999753e-05],
+						['DemoFunc_0_2_1\x0b\x0b\x0b', 'DemoFunc_0_1_0\x0b', 2.4620000000002973e-05, 2.4620000000002973e-05],
+						['<inside DemoFunc_0_2_1>\x0b\x0b\x0b', 'DemoFunc_0_2_1\x0b\x0b\x0b', 2.4620000000002973e-05, 2.4620000000002973e-05],
+						['DemoFunc_2_2_1\x0b', 'DemoFunc_2_1_1', 2.4189000000007788e-05, 2.4189000000007788e-05],
+						['<inside DemoFunc_2_2_1>\x0b', 'DemoFunc_2_2_1\x0b', 2.4189000000007788e-05, 2.4189000000007788e-05],
+						['DemoFunc_0_2_0\x0b\x0b\x0b\x0b\x0b', 'DemoFunc_0_1_2\x0b', 2.3335999999984924e-05, 2.3335999999984924e-05],
+						['<inside DemoFunc_0_2_0>\x0b\x0b\x0b\x0b\x0b', 'DemoFunc_0_2_0\x0b\x0b\x0b\x0b\x0b', 2.3335999999984924e-05, 2.3335999999984924e-05],
+						['DemoFunc_2_1_0\x0b\x0b', 'DemoFunc_2_0_2', 2.2991999999999457e-05, 2.2991999999999457e-05],
+						['<inside DemoFunc_2_1_0>\x0b\x0b', 'DemoFunc_2_1_0\x0b\x0b', 2.2991999999999457e-05, 2.2991999999999457e-05],
+						['DemoFunc_1_1_0', 'DemoFunc_1_0_0', 9.426000000001267e-05, 9.426000000001267e-05],
+						['<inside DemoFunc_1_1_0>', 'DemoFunc_1_1_0', 2.1892000000023337e-05, 2.1892000000023337e-05],
+						['DemoFunc_0_1_2\x0b', 'DemoFunc_0_0_2', 4.460400000000364e-05, 4.460400000000364e-05],
+						['<inside DemoFunc_0_1_2>\x0b', 'DemoFunc_0_1_2\x0b', 2.1268000000018716e-05, 2.1268000000018716e-05],
+						['<unknown>', '<CUMULATIVE_root>',0.0, 0.0],
+						['<inside <unknown>>', '<unknown>', 1e-10, 1e-10],
+					]);
+					var tree = new google.visualization.TreeMap(document.getElementById("chart_div_CUMULATIVE"));
+					function showFullTooltip(row, size, value) {
+						return '<div style="background:#fd9; padding:10px; border-style:solid">' +
+						'<span style="font-family:Courier"><b>' +
+						data.getValue(row, 0).split("").join("").split("<").join("&lt;").split(">").join("&gt;")
+						+ ':</b>' + _formatTime(data.getValue(row, 2)) + ' ms</span></div>'
+					}
+					var options = {
+						highlightOnMouseOver: true,
+						maxDepth: 1,
+						maxPostDepth: 20,
+						minHighlightColor: "#80a0ff",
+						midHighlightColor: "#ffffff",
+						maxHighlightColor: "#ff0000",
+						minColor: "#7390E6",
+						midColor: "#E6E6E6",
+						maxColor: "#e60000",
+						headerHeight: 15,
+						showScale: false,
+						height: 500,
+						useWeightedAverageForAggregation: true,
+						generateTooltip: showFullTooltip
+					};
+					tree.draw(data, options);
+				}
+			</script>
+			<script type="text/javascript">
+				var datas_CUMULATIVE = [
+					[ "DemoFunc_0_0", 0.0008477929999999856, 0.00010001099999995544, 3, 0.0005583180000000021, 3.0036999999982772e-05, 0.00028259766666666186, 3.8093999999988526e-05, 3.0036999999982772e-05, 3.333699999998515e-05,
+						[
+							[ "DemoFunc_0_0_0", 0.00046391500000003694, 5.757400000003243e-05, 2, 0.00024257100000002474, 0.0002213440000000122, 0.00023195750000001847, 3.124600000001254e-05, 2.632800000001989e-05, 2.8787000000016216e-05,
+								[
+									[ "DemoFunc_0_1_0", 0.00016379100000002422, 6.370700000002394e-05, 2, 0.00010279400000001715, 6.099700000000707e-05, 8.189550000001211e-05, 3.627000000000491e-05, 2.743700000001903e-05, 3.185350000001197e-05,
+										[
+											[ "DemoFunc_0_2_0", 6.761999999999047e-05, 6.761999999999047e-05, 2, 3.406000000000242e-05, 3.3559999999988044e-05, 3.380999999999523e-05, 3.406000000000242e-05, 3.3559999999988044e-05, 3.380999999999523e-05,
+												[]
+											],
+
+											[ "DemoFunc_0_2_1", 3.246400000000982e-05, 3.246400000000982e-05, 1, 3.246400000000982e-05, 3.246400000000982e-05, 3.246400000000982e-05, 3.246400000000982e-05, 3.246400000000982e-05, 3.246400000000982e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_0_1_1", 0.00011967999999998313, 5.982899999998348e-05, 2, 8.73039999999825e-05, 3.2376000000000626e-05, 5.9839999999991567e-05, 3.2376000000000626e-05, 2.7452999999982852e-05, 2.991449999999174e-05,
+										[
+											[ "DemoFunc_0_2_0", 3.4957000000002125e-05, 3.4957000000002125e-05, 1, 3.4957000000002125e-05, 3.4957000000002125e-05, 3.4957000000002125e-05, 3.4957000000002125e-05, 3.4957000000002125e-05, 3.4957000000002125e-05,
+												[]
+											],
+
+											[ "DemoFunc_0_2_1", 2.489399999999753e-05, 2.489399999999753e-05, 1, 2.489399999999753e-05, 2.489399999999753e-05, 2.489399999999753e-05, 2.489399999999753e-05, 2.489399999999753e-05, 2.489399999999753e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_0_1_2", 0.00012286999999999715, 3.110400000000402e-05, 1, 0.00012286999999999715, 0.00012286999999999715, 0.00012286999999999715, 3.110400000000402e-05, 3.110400000000402e-05, 3.110400000000402e-05,
+										[
+											[ "DemoFunc_0_2_2", 3.4986000000014617e-05, 3.4986000000014617e-05, 1, 3.4986000000014617e-05, 3.4986000000014617e-05, 3.4986000000014617e-05, 3.4986000000014617e-05, 3.4986000000014617e-05, 3.4986000000014617e-05,
+												[]
+											],
+
+											[ "DemoFunc_0_2_0", 2.913799999998412e-05, 2.913799999998412e-05, 1, 2.913799999998412e-05, 2.913799999998412e-05, 2.913799999998412e-05, 2.913799999998412e-05, 2.913799999998412e-05, 2.913799999998412e-05,
+												[]
+											],
+
+											[ "DemoFunc_0_2_1", 2.7641999999994393e-05, 2.7641999999994393e-05, 1, 2.7641999999994393e-05, 2.7641999999994393e-05, 2.7641999999994393e-05, 2.7641999999994393e-05, 2.7641999999994393e-05, 2.7641999999994393e-05,
+												[]
+											]
+										]
+									]
+								]
+							],
+
+							[ "DemoFunc_0_0_2", 0.0002284999999999926, 3.222299999999789e-05, 1, 0.0002284999999999926, 0.0002284999999999926, 0.0002284999999999926, 3.222299999999789e-05, 3.222299999999789e-05, 3.222299999999789e-05,
+								[
+									[ "DemoFunc_0_1_0", 8.677299999998445e-05, 3.230799999998091e-05, 1, 8.677299999998445e-05, 8.677299999998445e-05, 8.677299999998445e-05, 3.230799999998091e-05, 3.230799999998091e-05, 3.230799999998091e-05,
+										[
+											[ "DemoFunc_0_2_0", 2.9845000000000566e-05, 2.9845000000000566e-05, 1, 2.9845000000000566e-05, 2.9845000000000566e-05, 2.9845000000000566e-05, 2.9845000000000566e-05, 2.9845000000000566e-05, 2.9845000000000566e-05,
+												[]
+											],
+
+											[ "DemoFunc_0_2_1", 2.4620000000002973e-05, 2.4620000000002973e-05, 1, 2.4620000000002973e-05, 2.4620000000002973e-05, 2.4620000000002973e-05, 2.4620000000002973e-05, 2.4620000000002973e-05, 2.4620000000002973e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_0_1_1", 6.490000000000662e-05, 3.2113999999999754e-05, 1, 6.490000000000662e-05, 6.490000000000662e-05, 6.490000000000662e-05, 3.2113999999999754e-05, 3.2113999999999754e-05, 3.2113999999999754e-05,
+										[
+											[ "DemoFunc_0_2_0", 3.2786000000006865e-05, 3.2786000000006865e-05, 1, 3.2786000000006865e-05, 3.2786000000006865e-05, 3.2786000000006865e-05, 3.2786000000006865e-05, 3.2786000000006865e-05, 3.2786000000006865e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_0_1_2", 4.460400000000364e-05, 2.1268000000018716e-05, 1, 4.460400000000364e-05, 4.460400000000364e-05, 4.460400000000364e-05, 2.1268000000018716e-05, 2.1268000000018716e-05, 2.1268000000018716e-05,
+										[
+											[ "DemoFunc_0_2_0", 2.3335999999984924e-05, 2.3335999999984924e-05, 1, 2.3335999999984924e-05, 2.3335999999984924e-05, 2.3335999999984924e-05, 2.3335999999984924e-05, 2.3335999999984924e-05, 2.3335999999984924e-05,
+												[]
+											]
+										]
+									]
+								]
+							],
+
+							[ "DemoFunc_0_0_1", 5.536700000000061e-05, 3.0013999999994878e-05, 1, 5.536700000000061e-05, 5.536700000000061e-05, 5.536700000000061e-05, 3.0013999999994878e-05, 3.0013999999994878e-05, 3.0013999999994878e-05,
+								[
+									[ "DemoFunc_0_1_0", 2.5353000000005732e-05, 2.5353000000005732e-05, 1, 2.5353000000005732e-05, 2.5353000000005732e-05, 2.5353000000005732e-05, 2.5353000000005732e-05, 2.5353000000005732e-05, 2.5353000000005732e-05,
+										[]
+									]
+								]
+							]
+						]
+					],
+					[ "DemoFunc_0_1", 0.00025605600000003226, 9.493100000004806e-05, 3, 0.00015578500000001938, 3.412099999999807e-05, 8.535200000001075e-05, 3.412099999999807e-05, 2.7849000000024215e-05, 3.164366666668269e-05,
+						[
+							[ "DemoFunc_1_0_0", 0.0001611249999999842, 6.686499999997153e-05, 2, 0.00012793599999999516, 3.318899999998903e-05, 8.05624999999921e-05, 3.36759999999825e-05, 3.318899999998903e-05, 3.3432499999985765e-05,
+								[
+									[ "DemoFunc_1_1_0", 9.426000000001267e-05, 2.1892000000023337e-05, 1, 9.426000000001267e-05, 9.426000000001267e-05, 9.426000000001267e-05, 2.1892000000023337e-05, 2.1892000000023337e-05, 2.1892000000023337e-05,
+										[
+											[ "DemoFunc_1_2_0", 3.915199999998675e-05, 3.915199999998675e-05, 1, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05,
+												[]
+											],
+
+											[ "DemoFunc_1_2_1", 3.321600000000258e-05, 3.321600000000258e-05, 1, 3.321600000000258e-05, 3.321600000000258e-05, 3.321600000000258e-05, 3.321600000000258e-05, 3.321600000000258e-05, 3.321600000000258e-05,
+												[]
+											]
+										]
+									]
+								]
+							]
+						]
+					],
+					[ "DemoFunc_0_2", 0.0009023380000000025, 8.873700000003315e-05, 3, 0.0004959880000000028, 6.68129999999989e-05, 0.0003007793333333342, 3.444500000002182e-05, 2.6245000000008067e-05, 2.957900000001105e-05,
+						[
+							[ "DemoFunc_2_0_0", 0.00016046999999996814, 9.216099999997951e-05, 3, 9.522600000000381e-05, 3.236799999997708e-05, 5.348999999998938e-05, 3.287599999998725e-05, 2.691700000001518e-05, 3.07203333333265e-05,
+								[
+									[ "DemoFunc_2_1_1", 3.6972999999995704e-05, 3.6972999999995704e-05, 1, 3.6972999999995704e-05, 3.6972999999995704e-05, 3.6972999999995704e-05, 3.6972999999995704e-05, 3.6972999999995704e-05, 3.6972999999995704e-05,
+										[]
+									],
+
+									[ "DemoFunc_2_1_0", 3.1335999999992925e-05, 3.1335999999992925e-05, 1, 3.1335999999992925e-05, 3.1335999999992925e-05, 3.1335999999992925e-05, 3.1335999999992925e-05, 3.1335999999992925e-05, 3.1335999999992925e-05,
+										[]
+									]
+								]
+							],
+
+							[ "DemoFunc_2_0_1", 0.000475264000000003, 7.484400000001834e-05, 2, 0.00027861400000001035, 0.00019664999999999266, 0.0002376320000000015, 3.742800000000601e-05, 3.741600000001233e-05, 3.742200000000917e-05,
+								[
+									[ "DemoFunc_2_1_1", 0.00011433900000001884, 6.108600000001574e-05, 2, 8.43100000000041e-05, 3.002900000001474e-05, 5.716950000000942e-05, 3.1057000000001e-05, 3.002900000001474e-05, 3.054300000000787e-05,
+										[
+											[ "DemoFunc_2_2_0", 2.9063999999995316e-05, 2.9063999999995316e-05, 1, 2.9063999999995316e-05, 2.9063999999995316e-05, 2.9063999999995316e-05, 2.9063999999995316e-05, 2.9063999999995316e-05, 2.9063999999995316e-05,
+												[]
+											],
+
+											[ "DemoFunc_2_2_1", 2.4189000000007788e-05, 2.4189000000007788e-05, 1, 2.4189000000007788e-05, 2.4189000000007788e-05, 2.4189000000007788e-05, 2.4189000000007788e-05, 2.4189000000007788e-05, 2.4189000000007788e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_2_1_0", 0.00020167799999998293, 5.4422999999970134e-05, 2, 0.00010190999999998285, 9.976800000000008e-05, 0.00010083899999999146, 3.363300000000513e-05, 2.0789999999965003e-05, 2.7211499999985067e-05,
+										[
+											[ "DemoFunc_2_2_1", 6.319099999999023e-05, 6.319099999999023e-05, 2, 3.687299999999283e-05, 2.63179999999974e-05, 3.1595499999995114e-05, 3.687299999999283e-05, 2.63179999999974e-05, 3.1595499999995114e-05,
+												[]
+											],
+
+											[ "DemoFunc_2_2_0", 5.31790000000143e-05, 5.31790000000143e-05, 2, 2.926200000000212e-05, 2.391700000001218e-05, 2.658950000000715e-05, 2.926200000000212e-05, 2.391700000001218e-05, 2.658950000000715e-05,
+												[]
+											],
+
+											[ "DemoFunc_2_2_2", 3.088500000000827e-05, 3.088500000000827e-05, 1, 3.088500000000827e-05, 3.088500000000827e-05, 3.088500000000827e-05, 3.088500000000827e-05, 3.088500000000827e-05, 3.088500000000827e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_2_1_2", 8.440299999998291e-05, 5.3121999999961034e-05, 2, 5.711999999999384e-05, 2.7282999999989066e-05, 4.2201499999991454e-05, 2.7282999999989066e-05, 2.5838999999971968e-05, 2.6560999999980517e-05,
+										[
+											[ "DemoFunc_2_2_0", 3.1281000000021875e-05, 3.1281000000021875e-05, 1, 3.1281000000021875e-05, 3.1281000000021875e-05, 3.1281000000021875e-05, 3.1281000000021875e-05, 3.1281000000021875e-05, 3.1281000000021875e-05,
+												[]
+											]
+										]
+									]
+								]
+							],
+
+							[ "DemoFunc_2_0_2", 0.00017786699999999822, 3.389700000000495e-05, 1, 0.00017786699999999822, 0.00017786699999999822, 0.00017786699999999822, 3.389700000000495e-05, 3.389700000000495e-05, 3.389700000000495e-05,
+								[
+									[ "DemoFunc_2_1_1", 9.504099999999016e-05, 3.186299999999309e-05, 1, 9.504099999999016e-05, 9.504099999999016e-05, 9.504099999999016e-05, 3.186299999999309e-05, 3.186299999999309e-05, 3.186299999999309e-05,
+										[
+											[ "DemoFunc_2_2_0", 3.2666999999986235e-05, 3.2666999999986235e-05, 1, 3.2666999999986235e-05, 3.2666999999986235e-05, 3.2666999999986235e-05, 3.2666999999986235e-05, 3.2666999999986235e-05, 3.2666999999986235e-05,
+												[]
+											],
+
+											[ "DemoFunc_2_2_1", 3.0511000000010835e-05, 3.0511000000010835e-05, 1, 3.0511000000010835e-05, 3.0511000000010835e-05, 3.0511000000010835e-05, 3.0511000000010835e-05, 3.0511000000010835e-05, 3.0511000000010835e-05,
+												[]
+											]
+										]
+									],
+
+									[ "DemoFunc_2_1_2", 2.593700000000365e-05, 2.593700000000365e-05, 1, 2.593700000000365e-05, 2.593700000000365e-05, 2.593700000000365e-05, 2.593700000000365e-05, 2.593700000000365e-05, 2.593700000000365e-05,
+										[]
+									],
+
+									[ "DemoFunc_2_1_0", 2.2991999999999457e-05, 2.2991999999999457e-05, 1, 2.2991999999999457e-05, 2.2991999999999457e-05, 2.2991999999999457e-05, 2.2991999999999457e-05, 2.2991999999999457e-05, 2.2991999999999457e-05,
+										[]
+									]
+								]
+							]
+						]
+					],
+					[ "<unknown>", 0.0, 0.0, 6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+						[]
+					]
+				]
+				var totals_CUMULATIVE = [0.004012374000000041, 144, 0.0005583180000000021, 0.0005583180000000021, 0.0005583180000000021, 3.915199999998675e-05, 3.915199999998675e-05, 3.915199999998675e-05]
+				function HideChildren_CUMULATIVE(parentId) {
+						className = 'CUMULATIVE_Parent_' + parentId
+						elems = document.getElementsByClassName(className)
+						arrowElem = document.getElementById("arrow_CUMULATIVE_"+parentId)
+						for(var i = 0; i < elems.length; ++i) {
+							var elem = elems[i]
+							if(elem.style.maxHeight == '0px') {
+								elem.style.maxHeight=elem.rememberMaxHeight
+								arrowElem.innerHTML = '&#x25bc;'
+							}
+							else
+							{
+								elem.style.maxHeight='0px'
+								arrowElem.innerHTML = '&#x25b6;'
+							}
+						}
+					}
+
+					var mode_CUMULATIVE = "tree"
+
+					function Flatten_CUMULATIVE() {
+						ret = {}
+						function recurse(datas) {
+							if(datas.length == 0) {
+								return;
+							}
+							for(var i = 0; i < datas.length; ++i) {
+								if(datas[i][0] in ret) {
+									item = ret[datas[i][0]]
+									item[0] += datas[i][1]
+									item[1] += datas[i][2]
+									item[2] += datas[i][3]
+									item[3] += datas[i][4]
+									item[4] += datas[i][5]
+									item[5] += datas[i][6]
+									item[6] += datas[i][7]
+									item[7] += datas[i][8]
+									item[8] += datas[i][9]
+								}
+								else {
+									ret[datas[i][0]] = [
+										datas[i][1],
+										datas[i][2],
+										datas[i][3],
+										datas[i][4],
+										datas[i][5],
+										datas[i][6],
+										datas[i][7],
+										datas[i][8],
+										datas[i][9]
+									];
+								}
+								recurse(datas[i][10]);
+							}
+						}
+						recurse(datas_CUMULATIVE);
+						retArray = []
+						for(var key in ret) {
+							item = ret[key]
+							retArray.push([
+								key,
+								item[0],
+								item[1],
+								item[2],
+								item[3],
+								item[4],
+								item[5],
+								item[6],
+								item[7],
+								item[8],
+								[]
+							]);
+						}
+						return retArray;
+					}
+					
+					function escapeHtml(unsafe) {
+						return unsafe
+							 .replace(/&/g, "&amp;")
+							 .replace(/</g, "&lt;")
+							 .replace(/>/g, "&gt;")
+							 .replace(/"/g, "&quot;")
+							 .replace(/'/g, "&#039;");
+					}
+
+					var prevSortKey_CUMULATIVE = 1
+					var prevSortType_CUMULATIVE = -1
+					var maxId_CUMULATIVE = -1
+					function Populate_CUMULATIVE(sortKey) {
+						var sortType = 1
+						if(sortKey == 0) {
+							sortType = -1
+						}
+						if(prevSortKey_CUMULATIVE == sortKey && prevSortType_CUMULATIVE == sortType) {
+							sortType *= -1
+						}
+						prevSortKey_CUMULATIVE = sortKey
+						prevSortType_CUMULATIVE = sortType
+
+						elem = document.getElementById("stack_CUMULATIVE")
+						bg1 = "#DFDFF2"
+						bg2 = "#D3D3E6"
+						var s = '<div style="border:1px solid black"><div style="font-weight:bold;border-bottom:1px solid black;" class="gradient">'
+						s += '<span class="hoversort" style="width:37%;display:inline-block;text-align:center;" onclick="Populate_CUMULATIVE(0)">Block</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_CUMULATIVE(1)">Inclusive</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_CUMULATIVE(2)">Exclusive</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_CUMULATIVE(3)">Count</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_CUMULATIVE(4)">Inclusive Max</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_CUMULATIVE(5)">Inclusive Min</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_CUMULATIVE(6)">Inclusive Mean</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_CUMULATIVE(7)">Exclusive Max</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_CUMULATIVE(8)">Exclusive Min</span>'
+						s += '<span class="hoversort" style="width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;" onclick="Populate_CUMULATIVE(9)">Exclusive Mean</span>'
+						s += '</div>'
+						var id = 1
+						function recurse(oneLevel, depth, parentId) {
+							oneLevel = oneLevel.sort(function(a, b) {
+								var x = a[sortKey]; var y = b[sortKey];
+								return ((x < y) ? 1 : ((x > y) ? -1 : 0)) * sortType;
+							});
+							for(var i=0; i < oneLevel.length; ++i) {
+								var thisId = id;
+								id += 1;
+								if(thisId %2 == 0) {
+									bg1 = "#C8C6F2"
+									bg2 = "#B3B1D9"
+								}
+								else {
+									bg1 = "#BDBBE6"
+									bg2 = "#A8A7CC"
+								}
+								s += '<div style="width:100%;overflow:hidden;transition:max-height 0.5s linear" class="CUMULATIVE_Parent_'+parentId+'", id="CUMULATIVE_'+thisId+'">'
+								s += '<div style="line-height:22px;"><span style="height:100%;width:37%;display:inline-block;background-color:'+bg1+'" '
+								if(oneLevel[i][10].length != 0) {
+									s += 'class="hoversort" onclick="HideChildren_CUMULATIVE(\''+thisId+'\')"'
+								}
+								s += '><span style="width:20px;display:inline-block;margin-left:' + (depth * 15) + 'px;" id="arrow_CUMULATIVE_'+thisId+'">'
+								if(oneLevel[i][10].length != 0) {
+									s += '&#x25bc;'
+								}
+								s += '</span>' + escapeHtml(oneLevel[i][0]) + '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][1], totals_CUMULATIVE[0])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][1]/totals_CUMULATIVE[0] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][2], totals_CUMULATIVE[0])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][2]/totals_CUMULATIVE[0] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + oneLevel[i][3] + ' (' + Math.min(100,oneLevel[i][3]/totals_CUMULATIVE[1] * 100).toFixed(2) + '%)'
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][3]/totals_CUMULATIVE[1] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][4], totals_CUMULATIVE[2])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][4]/totals_CUMULATIVE[2] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][5], totals_CUMULATIVE[3])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][5]/totals_CUMULATIVE[3] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][6], totals_CUMULATIVE[4])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][6]/totals_CUMULATIVE[4] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][7], totals_CUMULATIVE[5])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][7]/totals_CUMULATIVE[5] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][8], totals_CUMULATIVE[6])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][8]/totals_CUMULATIVE[6] * 100) + '%;"></div>'
+								s += '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][9], totals_CUMULATIVE[7])
+								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][9]/totals_CUMULATIVE[7] * 100) + '%;"></div>'
+								s += '</span></div>'
+								recurse(oneLevel[i][10], depth + 1, thisId)
+								s += "</div>"
+							}
+						}
+						var datas;
+						if(mode_CUMULATIVE == "flat") {
+							datas = Flatten_CUMULATIVE();
+						}
+						else {
+							datas = datas_CUMULATIVE;
+						}
+						recurse(datas, 0, 0)
+						s += '</div>'
+						s += ''
+						elem.innerHTML = s
+						for(var i = 0; i < id; ++i) {
+							className = 'CUMULATIVE_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight = Math.max(22, elem.clientHeight) + "px"
+								elem.rememberMaxHeight = elem.style.maxHeight
+							}
+						}
+						maxId_CUMULATIVE = id
+					}
+
+					function ExpandAll_CUMULATIVE() {
+						for(var i = 1; i < maxId_CUMULATIVE; ++i) {
+							className = 'CUMULATIVE_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							arrowElem = document.getElementById("arrow_CUMULATIVE_"+i)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight=elem.rememberMaxHeight
+								arrowElem.innerHTML = '&#x25bc;'
+							}
+						}
+						return false;
+					}
+
+					function CollapseAll_CUMULATIVE() {
+						for(var i = 1; i < maxId_CUMULATIVE; ++i) {
+							className = 'CUMULATIVE_Parent_' + i
+							elems = document.getElementsByClassName(className)
+							arrowElem = document.getElementById("arrow_CUMULATIVE_"+i)
+							for(var j = 0; j < elems.length; ++j) {
+								var elem = elems[j]
+								elem.style.maxHeight='0px'
+								arrowElem.innerHTML = '&#x25b6;'
+							}
+						}
+						return false;
+					}
+
+					function RenderTreeView_CUMULATIVE() {
+						if(mode_CUMULATIVE != "tree") {
+							mode_CUMULATIVE = "tree";
+							prevSortType_CUMULATIVE *= -1
+							Populate_CUMULATIVE(prevSortKey_CUMULATIVE)
+							elem = document.getElementById("expandcollapse_CUMULATIVE")
+							elem.style.opacity = 100
+							elem.style.visibility = "visible"
+						}
+						return false;
+					}
+
+					function RenderFlatView_CUMULATIVE() {
+						if(mode_CUMULATIVE != "flat") {
+							mode_CUMULATIVE = "flat";
+							prevSortType_CUMULATIVE *= -1
+							Populate_CUMULATIVE(prevSortKey_CUMULATIVE)
+							elem = document.getElementById("expandcollapse_CUMULATIVE")
+							elem.style.opacity = 0
+							elem.style.visibility = "hidden"
+						}
+						return false;
+					}
+			</script>
+			<div>
+			<div style="border:1px solid black;padding:0px 6px">
+				<div style="float:left;transition:opacity 0.5s, visibility 0.5s" id="expandcollapse_CUMULATIVE">
+					<a href="javascript:;" onclick="ExpandAll_CUMULATIVE()">expand all</a> |
+					<a href="javascript:;" onclick="CollapseAll_CUMULATIVE()">collapse all</a>
+				</div>
+				&nbsp;
+				<div style="float:right">
+					View as:
+					<a href="javascript:;" onclick="RenderTreeView_CUMULATIVE()">tree</a> |
+					<a href="javascript:;" onclick="RenderFlatView_CUMULATIVE()">flat</a>
+				</div>
+			</div>
+			<div style="clear:left" id="stack_CUMULATIVE"></div>
+			</div>
+			<script type="text/javascript">
+				Populate_CUMULATIVE(1);
+			</script>
+		</div>
+	</BODY>
+</HTML>
