@@ -75,12 +75,18 @@ _htmlHeader = """<!DOCTYPE html><HTML>
 				s = "0000" + s
 				return s.substring(s.length - w)
 			}}
-
-			function _formatTime(totaltime){{
-				totalmin = Math.floor(totaltime / 60)
-				totalsec = Math.floor(totaltime % 60)
-				msec = Math.floor((totaltime - Math.floor(totaltime))*10000)
-				return totalmin + ":" + _width(totalsec, 2) + "." + _width(msec, 4)
+			function numberWithCommas(x) {{
+				return x.toString().replace(/\B(?=(\d{{3}})+(?!\d))/g, ",");
+			}}
+			function _formatTime(totaltime, globaltotal){{
+				msec = Math.floor(totaltime*1000);
+				usec = Math.floor((totaltime - Math.floor(totaltime))*100000)
+				ret = numberWithCommas(msec) + "." + _width(usec, 2)
+				if(globaltotal !== undefined)
+				{{
+					ret += ' (' + Math.min(100,totaltime/globaltotal * 100).toFixed(2) + '%)'
+				}}
+				return ret;
 			}}
 		</script>
 		<style>
@@ -127,8 +133,8 @@ _blocks = [
 					var data = new google.visualization.DataTable();
 					data.addColumn("string", "ID");
 					data.addColumn("string", "Parent");
-					data.addColumn("number", "Exclusive Time in Seconds");
-					data.addColumn("number", "Inclusive time in seconds");
+					data.addColumn("number", "Exclusive time in milliseconds");
+					data.addColumn("number", "Inclusive time in milliseconds");
 					data.addRows([
 """,
 """					]);
@@ -137,7 +143,7 @@ _blocks = [
 						return '<div style="background:#fd9; padding:10px; border-style:solid">' +
 						'<span style="font-family:Courier"><b>' +
 						data.getValue(row, 0).split("\x0b").join("").split("<").join("&lt;").split(">").join("&gt;")
-						+ ':</b>' + _formatTime(data.getValue(row, 2)) + ' seconds</span></div>'
+						+ ':</b>' + _formatTime(data.getValue(row, 2)) + ' ms</span></div>'
 					}}
 					var options = {{
 						highlightOnMouseOver: true,
@@ -236,6 +242,15 @@ _blocks = [
 						}}
 						return retArray;
 					}}
+					
+					function escapeHtml(unsafe) {{
+						return unsafe
+							 .replace(/&/g, "&amp;")
+							 .replace(/</g, "&lt;")
+							 .replace(/>/g, "&gt;")
+							 .replace(/"/g, "&quot;")
+							 .replace(/'/g, "&#039;");
+					}}
 
 					var prevSortKey_{0} = 1
 					var prevSortType_{0} = -1
@@ -292,32 +307,32 @@ _blocks = [
 								if(oneLevel[i][10].length != 0) {{
 									s += '&#x25bc;'
 								}}
-								s += '</span>' + oneLevel[i][0] + '</span>'
-								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][1])
+								s += '</span>' + escapeHtml(oneLevel[i][0]) + '</span>'
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][1], totals_{0}[0])
 								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][1]/totals_{0}[0] * 100) + '%;"></div>'
 								s += '</span>'
-								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][2])
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][2], totals_{0}[0])
 								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][2]/totals_{0}[0] * 100) + '%;"></div>'
 								s += '</span>'
-								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + oneLevel[i][3]
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + oneLevel[i][3] + ' (' + Math.min(100,oneLevel[i][3]/totals_{0}[1] * 100).toFixed(2) + '%)'
 								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][3]/totals_{0}[1] * 100) + '%;"></div>'
 								s += '</span>'
-								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][4])
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg1+'">' + _formatTime(oneLevel[i][4], totals_{0}[2])
 								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][4]/totals_{0}[2] * 100) + '%;"></div>'
 								s += '</span>'
-								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][5])
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][5], totals_{0}[3])
 								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][5]/totals_{0}[3] * 100) + '%;"></div>'
 								s += '</span>'
-								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][6])
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][6], totals_{0}[4])
 								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][6]/totals_{0}[4] * 100) + '%;"></div>'
 								s += '</span>'
-								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][7])
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][7], totals_{0}[5])
 								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][7]/totals_{0}[5] * 100) + '%;"></div>'
 								s += '</span>'
-								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][8])
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][8], totals_{0}[6])
 								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][8]/totals_{0}[6] * 100) + '%;"></div>'
 								s += '</span>'
-								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][9])
+								s += '<span style="height:100%;width:7%;display:inline-block;border-left:1px solid black;margin-left:-1px;text-align:center;background-color:'+bg2+'">' + _formatTime(oneLevel[i][9], totals_{0}[7])
 								s += '<div class="percentbar", style="width:' + Math.min(100,oneLevel[i][9]/totals_{0}[7] * 100) + '%;"></div>'
 								s += '</span></div>'
 								recurse(oneLevel[i][10], depth + 1, thisId)
@@ -333,6 +348,7 @@ _blocks = [
 						}}
 						recurse(datas, 0, 0)
 						s += '</div>'
+						s += '{2}'
 						elem.innerHTML = s
 						for(var i = 0; i < id; ++i) {{
 							className = '{0}_Parent_' + i
@@ -430,10 +446,8 @@ _htmlFooter = """	</BODY>
 
 
 def _formatTime(totaltime):
-	totalmin = math.floor(totaltime / 60)
-	totalsec = math.floor(totaltime % 60)
-	msec = math.floor((totaltime - math.floor(totaltime))*10000)
-	return "{}:{:02}.{:04}".format(int(totalmin), int(totalsec), int(msec))
+	msec = totaltime*1000
+	return "{:.2f}".format(msec)
 
 class PerfTimer(object):
 	"""
@@ -447,7 +461,13 @@ class PerfTimer(object):
 	:type frame: int or None
 	"""
 	perfQueue = deque()
+	annotations = deque()
 	perfStack = threading.local()
+	minFrameTime = None
+	
+	@staticmethod
+	def setMinFrameTime(minTime):
+		PerfTimer.minFrameTime = minTime
 
 	def __init__(self, blockName, frame=None):
 		if _collecting:
@@ -490,6 +510,12 @@ class PerfTimer(object):
 
 			PerfTimer.perfQueue.append((self.scopeName, self.inclusive, self.exclusive, self.threadId, self.frame, self.incstart, now))
 			PerfTimer.perfStack.stack.pop()
+			
+	@staticmethod
+	def Note(txt, frame=None):
+		if _collecting:
+			now = time.time()
+			PerfTimer.annotations.append((txt, threading.current_thread().ident, frame, now))
 
 	@staticmethod
 	def PrintPerfReport(reportMode, output=None, name=None):
@@ -521,28 +547,45 @@ class PerfTimer(object):
 		earliestByFrame = {}
 		latestByFrame = {}
 		allFramesQueue = deque()
+		allFramesAnnotations = deque()
+		annotationsByFrame = {}
 		while True:
 			try:
 				pair = PerfTimer.perfQueue.popleft()
 				frame = pair[4]
-				elementsByFrame.setdefault(frame, deque()).append(pair)
-				allFramesQueue.append(pair)
 				if frame in earliestByFrame:
 					earliestByFrame[frame] = min(earliestByFrame[frame], pair[5])
 					latestByFrame[frame] = max(latestByFrame[frame], pair[6])
 				else:
 					earliestByFrame[frame] = pair[5]
 					latestByFrame[frame] = pair[6]
+				if PerfTimer.minFrameTime is not None and (duration * 1000) < PerfTimer.minFrameTime:
+					continue
+				elementsByFrame.setdefault(frame, deque()).append(pair)
+				allFramesQueue.append(pair)
 			except IndexError:
 				break
 
-		longest = 0
+		while True:
+			try:
+				pair = PerfTimer.annotations.popleft()
+				frame = pair[2]
+				globalEarliest = min(earliestByFrame.values())
+				allFramesPair = (pair[0], pair[1], pair[2], pair[3] - globalEarliest)
+				allFramesAnnotations.append(allFramesPair)
+				# Convert timestamp to a relative timestamp for this frame
+				pair = (pair[0], pair[1], pair[2], pair[3] - earliestByFrame[frame])
+				annotationsByFrame.setdefault(frame, deque()).append(pair)
+			except IndexError:
+				break
+				
 		if len(elementsByFrame) != 1 and reportMode == ReportMode.HTML:
 			if not os.path.exists(os.path.join(os.path.dirname(output), "frames")):
 				os.mkdir(os.path.join(os.path.dirname(output), "frames"))
 			if __name__ == "__main__":
 				print("Generating combined frame output...")
 			PerfTimer.perfQueue = allFramesQueue
+			#PerfTimer.annotations = allFramesAnnotations
 			thisOutput = os.path.join(os.path.dirname(output), "frames", "_ALL.".join(os.path.basename(output).rsplit(".", 1)))
 			PerfTimer._printPerfReport(reportMode, thisOutput, None, name)
 
@@ -553,9 +596,10 @@ class PerfTimer(object):
 					output("Frame #{}".format(key))
 					output("==============================")
 				elif __name__ == "__main__":
-					print("Generating individual frame output for frame {}...".format(key))
-			longest = max(longest, latestByFrame[key] - earliestByFrame[key])
+					sys.stdout.write("\rGenerating individual frame output for frame {}...".format(key))
+			duration = latestByFrame[key] - earliestByFrame[key]
 			PerfTimer.perfQueue = elementsByFrame[key]
+			PerfTimer.annotations = annotationsByFrame[key]
 			thisOutput = output
 			if len(elementsByFrame) != 1 and reportMode == ReportMode.HTML:
 				thisOutput = os.path.join(os.path.dirname(output), "frames", "_{}.".format(key).join(os.path.basename(output).rsplit(".", 1)))
@@ -563,7 +607,7 @@ class PerfTimer(object):
 
 		if len(elementsByFrame) != 1 and reportMode == ReportMode.HTML:
 			if __name__ == "__main__":
-				print("Generating index file and performance graph...")
+				print("\nGenerating index file and performance graph...")
 			frameFile = os.path.join(os.path.dirname(output), "frames", "_${pn}.".join(os.path.basename(output).rsplit(".", 1))).replace("\\", "/")
 			allFramesFile = os.path.join(os.path.dirname(output), "frames", "_ALL.".join(os.path.basename(output).rsplit(".", 1))).replace("\\", "/")
 			html = """
@@ -640,11 +684,11 @@ Plotly.newPlot(
 document.getElementById('plot').on('plotly_click', singleClickHandler);
 
 function singleClickHandler(data) {
-  let pn = data.points[0].pointNumber;
+  let pn = data.points[0].pointNumber + 1;
   document.getElementById("frameData").src = `./""" + frameFile + """`;
   let tn = data.points[0].curveNumber;
   let colors = new Array(data.points[0].data.x.length).fill("#1f77b4")
-  colors[pn] = '#C54C82';
+  colors[pn-1] = '#C54C82';
   var update = {'marker':{color: colors, size:16}};
   Plotly.restyle('plot', update,[tn]);
 }
@@ -718,6 +762,15 @@ window.addEventListener('message', function(e) {
 			except IndexError:
 				break
 
+		annotations = []
+		while True:
+			try:
+				pair = PerfTimer.annotations.popleft()
+			except IndexError:
+				break
+			else:
+				annotations.append(pair)
+				
 		if not fullreport:
 			return
 
@@ -798,7 +851,7 @@ window.addEventListener('message', function(e) {
 						f.write("\t" * indent)
 					f.write("]\n")
 
-				def _printReportHtml(report, threadId):
+				def _printReportHtml(report, threadId, numericThreadId):
 					if not report:
 						return
 					totalcount = 0
@@ -886,7 +939,18 @@ window.addEventListener('message', function(e) {
 						SharedLocals.maxIncMax, SharedLocals.maxIncMin, SharedLocals.maxIncMean,
 						SharedLocals.maxExcMax, SharedLocals.maxExcMin, SharedLocals.maxExcMean,
 					))
-					f.write(_blocks[2].format(threadScriptId, threadId))
+					annotationData = ''
+					for annotation in annotations:
+						txt, annotationThreadId, _, relativeTime = annotation
+						if annotationThreadId == numericThreadId:
+							if annotationData == '':
+								annotationData = '<div style="border:1px solid black; background-color:#ccf; width:100%;padding:10px;"><h3>Notes</h3><ul>'
+							annotationData += '<li>At <strong>' + _formatTime(relativeTime) + ':</strong> ' + txt + '</li>'
+					
+					if annotationData != '':
+						annotationData += '</ul></div>'
+							
+					f.write(_blocks[2].format(threadScriptId, threadId, annotationData))
 
 				f.write(_htmlHeader.format(name, " (Frame #{})".format(frameId) if frameId is not None else ""))
 
@@ -894,10 +958,10 @@ window.addEventListener('message', function(e) {
 					if threadId == threading.current_thread().ident and __name__ != "__main__":
 						continue
 					else:
-						_printReportHtml(report, "Worker Thread {}".format(threadId))
+						_printReportHtml(report, "Worker Thread {}".format(threadId), threadId)
 
 				if threading.current_thread().ident in threadreports and __name__ != "__main__":
-					_printReportHtml(threadreports[threading.current_thread().ident], "Main Thread")
+					_printReportHtml(threadreports[threading.current_thread().ident], "Main Thread", threading.current_thread().ident)
 
 				if len(threadreports) != 1:
 					_printReportHtml(fullreport, "CUMULATIVE")
@@ -1028,8 +1092,9 @@ if __name__ == "__main__":
 	class Operation:
 		Enter = 0
 		Exit = 1
+		Note = 2
 	if len(sys.argv) < 2:
-		print("Syntax: perf_timer.py <metricsFilename> <outputHtmlFilename> <applicationName>")
+		print("Syntax: perf_timer.py <metricsFilename> <outputHtmlFilename> <applicationName> [minFrameTime (ms)]")
 		sys.exit(1)
 	if sys.argv[1] == "test":
 		if len(sys.argv) != 4 and len(sys.argv) != 5:
@@ -1038,18 +1103,19 @@ if __name__ == "__main__":
 		threads = 1
 		if len(sys.argv) == 5 and sys.argv[4] == "threaded":
 			threads = 3
-		def test(recursion, name, frame, thread):
+		def test(recursion, name, iter, frame, thread):
 			import random
 			with PerfTimer(name, frame) as pt:
 				pt.threadId = thread
 				time.sleep(random.uniform(0.0001, 0.001))
 				if recursion < 5:
 					for i in range(random.randint(0, 3)):
-						test(recursion + 1, "DemoFunc_" + str(recursion) + "_" + str(i), frame, thread)
+						test(recursion + 1, "DemoFunc_{}_{}_{}".format(iter, recursion, i), frame, thread)
 		for i in range(1000):
 			for t in range(threads):
 				print(i)
-				test(0, "DemoFunc_0", i, t)
+				for j in range(3):
+					test(0, "DemoFunc_0_{}".format(j), j, i, t)
 	elif sys.argv[1] == "test_write_json" or sys.argv[1] == "test_write_binary":
 		if len(sys.argv) != 2 and len(sys.argv) != 3:
 			print("Syntax: perf_timer.py " + sys.argv[1] + " [threaded]")
@@ -1058,7 +1124,7 @@ if __name__ == "__main__":
 		if len(sys.argv) == 3 and sys.argv[2] == "threaded":
 			threads = 3
 		datas = []
-		def test(recursion, name, frame, thread):
+		def test(recursion, name, iter, frame, thread):
 			import random
 			import time
 			import math
@@ -1066,12 +1132,13 @@ if __name__ == "__main__":
 			time.sleep(random.uniform(0.0001, 0.001))
 			if recursion < 5:
 				for i in range(random.randint(0, 3)):
-					test(recursion + 1, "DemoFunc_" + str(recursion) + "_" + str(i), frame, thread)
+					test(recursion + 1, "DemoFunc_{}_{}_{}".format(iter, recursion, i), frame, thread)
 			datas.append([Operation.Exit, thread, frame, math.floor(time.time() * 1000 * 1000 * 1000), name])
-		for i in range(1000):
+		for i in range(100):
 			for t in range(threads):
 				print(i)
-				test(0, "DemoFunc_0", i, t)
+				for j in range(3):
+					test(0, "DemoFunc_0_{}".format(j), j, i, t)
 		import json
 		if sys.argv[1] == "test_write_json":
 			with open("test_json_data.json", "w") as f:
@@ -1082,17 +1149,18 @@ if __name__ == "__main__":
 				f.write(struct.pack("<L", 0xFA57))
 				f.write(struct.pack("<L", len(datas)))
 				for data in datas:
-					f.write(struct.pack("<bQiQ", data[0], data[1], data[2], int(data[3])))
+					f.write(struct.pack("<bQiQH", data[0], data[1], data[2], int(data[3]), len(data[4])))
 					if sys.version_info[0] >= 3:
 						f.write(data[4].encode("ascii"))
 					else:
 						f.write(data[4])
-					f.write(b"\0")
 		sys.exit(0)
 	else:
-		if len(sys.argv) != 4:
-			print("Syntax: perf_timer.py metricsFilename outputHtmlFilename applicationName")
+		if len(sys.argv) != 4 and len(sys.argv) != 5:
+			print("Syntax: perf_timer.py metricsFilename outputHtmlFilename applicationName [minFrameTime (ms)]")
 			sys.exit(1)
+		if len(sys.argv) == 5:
+			PerfTimer.setMinFrameTime(float(sys.argv[4]))
 		with open(sys.argv[1], "rb") as f:
 			import struct
 
@@ -1106,30 +1174,28 @@ if __name__ == "__main__":
 				for _ in range(count):
 					i += 1
 					if i % 10000 == 0:
-						print("... {}".format(i))
-					line = list(struct.unpack("<bQiQ", f.read(1+8+4+8)))
+						sys.stdout.write("\r... {} ({:.1f}%)".format(i, i/count*100))
+					line = list(struct.unpack("<bQiQH", f.read(1+8+4+8+2)))
 					name = b""
-					c = f.read(1)
-					while c != b"\0":
-						name += c
-						c = f.read(1)
-					line.append(name)
+					name = f.read(line[4])
+					line[4] = name.replace(b"::", b".")
 					recordings.append(line)
-				print("Data loaded, processing...")
+				print("\rData loaded, processing...")
 
 			else:
 				f.seek(0, os.SEEK_SET)
 				import json
 				print("File is not binary. Processing as JSON...")
 				recordings = json.load(f)
-				print("File provides {} events".format(len(recordings)))
+				print("File provides {} events, processing...".format(len(recordings)))
 
 		stacks = {}
+		lastEnd = {}
 		i = 0
 		for recording in recordings:
 			i += 1
 			if i % 10000 == 0:
-				print("... {}".format(i))
+				sys.stdout.write("\r... {} ({:.1f}%)".format(i, i/len(recordings)*100))
 			operation, threadId, frameId, timestamp, name = recording
 			timestamp /= 1000 * 1000 * 1000
 			if sys.version_info[0] >= 3 and isinstance(name, bytes):
@@ -1145,17 +1211,25 @@ if __name__ == "__main__":
 
 					stacks[threadId].append(timer)
 				except:
+					lastEndThisFrameAndThread = lastEnd.get(threadId, {}).get(frameId, None)
+					if lastEndThisFrameAndThread is not None:
+						lastEnd.setdefault(threadId, {})[frameId] = None
+						duration = timestamp - lastEndThisFrameAndThread
+						PerfTimer.perfQueue.append(
+							("<unknown>", duration, duration, threadId, frameId, lastEndThisFrameAndThread, timestamp))
+						
 					stacks[threadId] = [timer]
 
 				timer.incstart = timestamp
 				timer.excstart = timestamp
 
-			else:
+			elif operation == Operation.Exit:
 				timer = stacks[threadId][-1]
 				try:
 					prev = stacks[threadId][-2]
 					prev.excstart = timestamp
 				except:
+					lastEnd.setdefault(threadId, {})[frameId] = timestamp
 					pass
 
 				timer.exclusive += timestamp - timer.excstart
@@ -1164,6 +1238,12 @@ if __name__ == "__main__":
 				PerfTimer.perfQueue.append(
 					(timer.scopeName, timer.inclusive, timer.exclusive, timer.threadId, timer.frame, timer.incstart, timestamp))
 				stacks[threadId].pop()
-		print("Finished processing {} events. Generating output...".format(len(recordings)))
+			elif operation == Operation.Note:
+				PerfTimer.annotations.append((name, threadId, frameId, timestamp))
+			else:
+				print("\rInvalid operation: {}".format(operation))
+				exit(1)
+				
+		print("\rFinished processing {} events. Generating output...".format(len(recordings)))
 
 	PerfTimer.PrintPerfReport(ReportMode.HTML, sys.argv[2], sys.argv[3])

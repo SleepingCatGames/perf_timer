@@ -153,7 +153,8 @@ The definition of `struct Event` is as follows:
 | Thread ID | unsigned int64 | 8 bytes | Any integer value unique to the current thread
 | Frame ID | signed int32 | 4 bytes | The current frame count for this event, or -1 if not using frame-based profiling |
 | Timestamp | unsigned int64 | 8 bytes | The timestamp of the event in nanoseconds |
-| Block Name | char* | Variable | The name of the current context as a null-terminated string
+| String Length | unsigned int16 | 2 bytes | The length of the Block Name string in bytes |
+| Block Name | char* | Variable | The name of the current context as a string without the null terminator
 
 Example binary data:
 
@@ -185,7 +186,8 @@ for( i = 0; i < count; i++ )
         int64 threadId<comment="Numeric thread ID">;
         int32 frameId<comment="Frame counter for this event">;
         uint64 time<comment="Nanosecond timestamp">;
-        string name<comment="Null-terminated block name">;
+        uint16 strlen<comment="String length">;
+        char name[strlen]<comment="Block name">;
     };
     Foo f;
 }
@@ -193,3 +195,35 @@ for( i = 0; i < count; i++ )
 ```
 
 You can also use that template to test the validity of any binary output you generate.
+
+# Reference Implementations
+
+A reference implementation for generating perf timer data in another language is provided in the lib_references directory. Currently, only a header for C++ is provided.
+
+The C++ presentation is a 100% usable implementation of the perf timer; however, it is somewhat naiive about multithreading, using std::mutex to guard events rather than using a more tailored solution such as a concurrent queue. This decision was made to keep the reference implementation as simple as possible, but it should be fairly trivial to change it to use a concurrent queue.
+
+Note that by default, multithreading is not enabled to avoid taking the cost in single-threaded apps. You can control this by defining PERFTIMER_MULTITHREADED to true before including the header, or by modifying the header. (It's recomended to set this in the makefile or other build settings to ensure it's applied consistently to all headers or you may have crashes.)
+
+Additionally, the perf timer *itself* is also disabled by default so that instrumenting your code has zero cost unless you make a build with the perf timer turned on. To turn it on, simply #define PERFTIMER_ENABLED before including the header. (Again, recommended to do this in the makefile.)
+
+Basic usage:
+
+```c++
+void SomeFunction()
+{
+    // This creates a performance timer for this function scope. It's automatically named with
+    // the function's name and results in an object that will go out of scope when the function
+    // returns.
+    PERF_TIMER(g_frameCount);
+
+    // This provides a note, which will appear on the output as an annotation on the frame it's
+    // associated with. This is helpful for tracking the impact on frame time of certain rare events.
+    PERF_NOTE("A note!", g_frameCount);
+
+    {
+        // This creates a block-scope perf timer that will track only the time within
+        // this specific block of code, and will go out of scope at the closing brace.
+        ::PerfTimer::PerfTimer blockTimer("Some block", g_frameCount);
+    }
+}
+```
