@@ -203,7 +203,7 @@ namespace PerfTimer
 				perror("Could not open perf_timer output file for writing.");
 				return;
 			}
-			int magic = 0xFA57;
+			int32_t magic = 0xFA57;
 			fwrite(&magic, sizeof(magic), 1, output);
 			fwrite(&m_count, sizeof(m_count), 1, output);
 			ProfileEventBuffer* buffer = m_first;
@@ -212,9 +212,9 @@ namespace PerfTimer
 				ProfileEvent* event = buffer->events;
 				while (event < buffer->current)
 				{
-					fwrite(event, sizeof(EventType) + sizeof(long long) + sizeof(int) + sizeof(long long), 1, output);
-					unsigned short len = static_cast<unsigned short>(strlen(event->name));
-					fwrite(&len, sizeof(unsigned short), 1, output);
+					fwrite(event, sizeof(EventType) + sizeof(int64_t) + sizeof(int32_t) + sizeof(int64_t), 1, output);
+					int16_t len = static_cast<int16_t>(strlen(event->name));
+					fwrite(&len, sizeof(int16_t), 1, output);
 					if (event->name[0] == '\1')
 					{
 						fwrite(event->name + 1, len - 1, 1, output);
